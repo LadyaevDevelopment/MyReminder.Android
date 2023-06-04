@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/dashboardFragment">
+
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="ldev.myNotifier.presentation.fragments.dashboard.DashboardFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/todayFragment"
+        android:name="ldev.myNotifier.presentation.fragments.today.TodayFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/allFragment"
+        android:name="ldev.myNotifier.presentation.fragments.all.AllFragment">
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="ldev.myNotifier.presentation.fragments.settings.SettingsFragment">
+    </fragment>
+
+</navigation>
