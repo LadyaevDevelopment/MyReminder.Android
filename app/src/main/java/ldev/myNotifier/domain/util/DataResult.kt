@@ -1,4 +1,4 @@
-package ldev.myNotifier.domain
+package ldev.myNotifier.domain.util
 
 data class DataResult<T>(
     val success: Boolean,

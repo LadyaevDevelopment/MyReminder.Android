@@ -1,4 +1,7 @@
 package ldev.myNotifier.presentation.fragments.all
 
-class AllViewModel {
+import androidx.lifecycle.ViewModel
+import javax.inject.Inject
+
+class AllViewModel @Inject constructor() : ViewModel() {
 }

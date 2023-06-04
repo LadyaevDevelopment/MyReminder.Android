@@ -1,7 +1,7 @@
 package ldev.myNotifier.domain.repositories
 
 import kotlinx.coroutines.flow.Flow
-import ldev.myNotifier.domain.DataResult
+import ldev.myNotifier.domain.util.DataResult
 import ldev.myNotifier.domain.entities.Notification
 
 interface NotificationRepository {
