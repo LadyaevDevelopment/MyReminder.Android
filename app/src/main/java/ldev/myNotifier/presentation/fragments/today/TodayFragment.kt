@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ldev.myNotifier.databinding.FragmentTodayBinding
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
+import ldev.myNotifier.utils.recyclerView.FingerprintAdapter
 import javax.inject.Inject
 
 class TodayFragment : BaseFragment<FragmentTodayBinding>() {
@@ -18,7 +19,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var _notificationAdapter: NotificationAdapter? = NotificationAdapter()
+    private var _notificationAdapter: FingerprintAdapter? = FingerprintAdapter(listOf(NotificationFingerprint()))
     private val notificationAdapter = _notificationAdapter!!
 
     override fun getContentInflater(): (LayoutInflater, ViewGroup?, Boolean) -> FragmentTodayBinding {
@@ -35,7 +36,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         lifecycleScope.launchWhenStarted {
             viewModel.state.observe(viewLifecycleOwner) {
                 lifecycleScope.launchWhenResumed {
-                    notificationAdapter.setItems(it.notifications)
+                    notificationAdapter.submitList(it.notifications)
                 }
             }
         }
