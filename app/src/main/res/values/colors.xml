@@ -3,4 +3,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="chineseBlack">#161616</color>
+    <color name="grayishViolet">#C8A2D6</color>
+    <color name="bisque">#F9E5C5</color>
+    <color name="darkCharcoal">#313131</color>
+    <color name="frenchLilac">#856292</color>
+    <color name="limeGreen">#9DCDBD</color>
+    <color name="brunswickGreen">#1B5741</color>
+    <color name="azureWhite">#DEECEC</color>
+    <color name="deepSpaceSparkle">#436061</color>
 </resources>
