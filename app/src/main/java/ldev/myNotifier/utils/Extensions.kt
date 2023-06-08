@@ -2,7 +2,9 @@ package ldev.myNotifier.utils
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.content.Context
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import kotlin.math.abs
 
@@ -38,4 +40,15 @@ fun ViewPager2.smoothScrollTo(newPosition: Int, duration: Long = 75) {
     animator.interpolator = AccelerateDecelerateInterpolator()
     animator.duration = duration
     animator.start()
+}
+
+val Fragment.ctx get() = requireContext()
+
+fun Fragment.dpToPixels(dp: Int): Int {
+    return ctx.dpToPixels(dp)
+}
+
+fun Context.dpToPixels(dp: Int): Int {
+    val scale = resources.displayMetrics.density
+    return (dp * scale + 0.5f).toInt()
 }

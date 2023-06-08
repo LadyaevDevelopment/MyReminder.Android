@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import ldev.myNotifier.databinding.FragmentTodayBinding
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
+import ldev.myNotifier.utils.dpToPixels
 import ldev.myNotifier.utils.recyclerView.FingerprintAdapter
 import javax.inject.Inject
 
@@ -47,6 +48,12 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = notificationAdapter
+            addItemDecoration(
+                NotificationItemDecorator(
+                    innerDivider = dpToPixels(4),
+                    outerDivider = dpToPixels(4)
+                )
+            )
         }
     }
 
