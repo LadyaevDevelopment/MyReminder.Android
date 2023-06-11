@@ -2,6 +2,7 @@
 <navigation
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
     app:startDestination="@id/dashboardFragment">
 
     <fragment
@@ -23,5 +24,13 @@
         android:id="@+id/settingsFragment"
         android:name="ldev.myNotifier.presentation.fragments.settings.SettingsFragment">
     </fragment>
+
+    <fragment
+        android:id="@+id/editOneTimeNotificationFragment"
+        android:name="ldev.myNotifier.presentation.fragments.editOneTimeNotification.EditOneTimeNotificationFragment">
+    </fragment>
+    <action
+        android:id="@+id/actionGlobal_todayFragment_to_editOneTimeNotificationFragment"
+        app:destination="@id/editOneTimeNotificationFragment" />
 
 </navigation>

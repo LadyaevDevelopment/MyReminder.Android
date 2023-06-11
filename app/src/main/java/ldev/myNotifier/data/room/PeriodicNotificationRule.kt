@@ -32,6 +32,7 @@ data class PeriodicNotificationRule(
     @ColumnInfo(name = NOTIFICATION_ID)
     val notificationId: Long,
     @ColumnInfo(name = DAY_OF_WEEK)
+    @TypeConverters(DayOfWeekConverter::class)
     val dayOfWeek: DayOfWeek,
     @ColumnInfo(name = TIME)
     @TypeConverters(DateConverter::class)

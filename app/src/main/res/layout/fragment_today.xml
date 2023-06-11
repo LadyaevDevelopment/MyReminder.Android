@@ -26,6 +26,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addNotificationBtn"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/add"
+        app:layout_constraintTop_toBottomOf="@id/today"
+        app:layout_constraintEnd_toEndOf="@id/today" />
+
     <TextView
         android:id="@+id/completed"
         android:layout_width="0dp"

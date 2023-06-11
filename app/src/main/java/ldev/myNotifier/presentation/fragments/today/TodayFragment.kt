@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavGraph
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import ldev.myNotifier.NavGraphDirections
 import ldev.myNotifier.databinding.FragmentTodayBinding
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
@@ -50,6 +53,9 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.today.text = Date().formatAsFullDayFullMonthFullYear()
+        binding.addNotificationBtn.setOnClickListener {
+            findNavController().navigate(NavGraphDirections.actionGlobalTodayFragmentToEditOneTimeNotificationFragment())
+        }
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
                 isSmoothScrollbarEnabled = false

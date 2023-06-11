@@ -52,10 +52,12 @@ class NotificationViewHolder(
                 TodayNotificationStatus.Postponed -> root.context.getColor(R.color.brightRed)
                 TodayNotificationStatus.Pending -> root.context.getColor(R.color.bisque)
             })
-            time.text = if (item.status == TodayNotificationStatus.Postponed) {
-                "${item.initialTime.formatAsHoursMinutes()} ➝ ${item.time.formatAsHoursMinutes()}"
+            if (item.status == TodayNotificationStatus.Postponed) {
+                time.text = item.run { "${initialTime.formatAsHoursMinutes()} ➝ ${time.formatAsHoursMinutes()}" }
+                time.setTextColor(root.context.getColor(R.color.white))
             } else {
-                item.time.formatAsHoursMinutes()
+                time.text = item.time.formatAsHoursMinutes()
+                time.setTextColor(root.context.getColor(R.color.black))
             }
         }
     }
