@@ -2,7 +2,7 @@ package ldev.myNotifier.di
 
 import dagger.Module
 import dagger.Provides
-import ldev.myNotifier.domain.repositories.NotificationMockRepository
+import ldev.myNotifier.data.repositories.NotificationMockRepository
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import javax.inject.Singleton
 

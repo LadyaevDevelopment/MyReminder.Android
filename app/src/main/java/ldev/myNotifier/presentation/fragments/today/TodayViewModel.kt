@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ldev.myNotifier.domain.entities.Notification
+import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ class TodayViewModel @Inject constructor(
 }
 
 data class TodayUiState(
-    val notifications: List<Notification>,
+    val notifications: List<TodayNotification>,
     val errorMessage: String?
 ) {
     companion object {

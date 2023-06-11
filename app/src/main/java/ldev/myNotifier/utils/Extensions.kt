@@ -5,7 +5,11 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.abs
 
 fun <K, V> Map<K, V>.reversed() = HashMap<V, K>().also { newMap ->
@@ -51,4 +55,20 @@ fun Fragment.dpToPixels(dp: Int): Int {
 fun Context.dpToPixels(dp: Int): Int {
     val scale = resources.displayMetrics.density
     return (dp * scale + 0.5f).toInt()
+}
+
+fun Date.formatAsHoursMinutes(): String {
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return format.format(this)
+}
+
+fun ViewPager2.reduceDragSensitivity(factor: Int) {
+    val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")
+    recyclerViewField.isAccessible = true
+    val recyclerView = recyclerViewField.get(this) as RecyclerView
+
+    val touchSlopField = RecyclerView::class.java.getDeclaredField("mTouchSlop")
+    touchSlopField.isAccessible = true
+    val touchSlop = touchSlopField.get(recyclerView) as Int
+    touchSlopField.set(recyclerView, touchSlop * factor)
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import ldev.myNotifier.R
@@ -13,6 +14,7 @@ import ldev.myNotifier.presentation.fragments.settings.SettingsFragment
 import ldev.myNotifier.presentation.fragments.today.TodayFragment
 import ldev.myNotifier.presentation.fragments.all.AllFragment
 import ldev.myNotifier.utils.BaseFragment
+import ldev.myNotifier.utils.reduceDragSensitivity
 import ldev.myNotifier.utils.reversed
 import ldev.myNotifier.utils.smoothScrollTo
 
@@ -44,6 +46,10 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>() {
             }
         }
         binding.viewPager.isSaveEnabled = false
+        binding.viewPager.apply {
+            (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+        }
+        binding.viewPager.reduceDragSensitivity(4)
 
         binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
             val newPosition = menuItems.reversed()[menuItem.itemId]!!
