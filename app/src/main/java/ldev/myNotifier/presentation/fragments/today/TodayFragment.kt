@@ -13,7 +13,9 @@ import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.HorizontalItemDecorator
 import ldev.myNotifier.utils.VerticalItemDecorator
 import ldev.myNotifier.utils.dpToPixels
+import ldev.myNotifier.utils.formatAsFullDayFullMonthFullYear
 import ldev.myNotifier.utils.recyclerView.FingerprintAdapter
+import java.util.Date
 import javax.inject.Inject
 
 class TodayFragment : BaseFragment<FragmentTodayBinding>() {
@@ -47,6 +49,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.today.text = Date().formatAsFullDayFullMonthFullYear()
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
                 isSmoothScrollbarEnabled = false

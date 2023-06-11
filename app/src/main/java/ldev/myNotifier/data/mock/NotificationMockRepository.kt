@@ -1,4 +1,4 @@
-package ldev.myNotifier.data.repositories
+package ldev.myNotifier.data.mock
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -35,23 +35,23 @@ class NotificationMockRepository : NotificationRepository {
     )
 
     private val notificationsForToday = listOf(
-        TodayNotification(id = 1, title = "1", time = Date(), status = TodayNotificationStatus.Postponed),
-        TodayNotification(id = 2, title = "2", time = Date(), status = TodayNotificationStatus.Postponed),
-        TodayNotification(id = 3, title = "3", time = Date(), status = TodayNotificationStatus.Postponed),
-        TodayNotification(id = 4, title = "4", time = Date(), status = TodayNotificationStatus.Postponed),
-        TodayNotification(id = 5, title = "5", time = Date(), status = TodayNotificationStatus.Postponed),
-        TodayNotification(id = 6, title = "6", time = Date(), status = TodayNotificationStatus.Postponed),
-        TodayNotification(id = 7, title = "7", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 8, title = "8", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 9, title = "9", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 10, title = "10", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 11, title = "11", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 12, title = "12", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 13, title = "13", time = Date(), status = TodayNotificationStatus.Pending),
-        TodayNotification(id = 14, title = "14", time = Date(), status = TodayNotificationStatus.Completed),
-        TodayNotification(id = 15, title = "15", time = Date(), status = TodayNotificationStatus.Completed),
-        TodayNotification(id = 16, title = "16", time = Date(), status = TodayNotificationStatus.Completed),
-        TodayNotification(id = 17, title = "17", time = Date(), status = TodayNotificationStatus.Completed),
+        TodayNotification(id = 1, title = "1", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Postponed),
+        TodayNotification(id = 2, title = "2", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Postponed),
+        TodayNotification(id = 3, title = "3", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Postponed),
+        TodayNotification(id = 4, title = "4", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Postponed),
+        TodayNotification(id = 5, title = "5", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Postponed),
+        TodayNotification(id = 6, title = "6", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Postponed),
+        TodayNotification(id = 7, title = "7", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 8, title = "8", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 9, title = "9", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 10, title = "10", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 11, title = "11", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 12, title = "12", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 13, title = "13", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Pending),
+        TodayNotification(id = 14, title = "14", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Completed),
+        TodayNotification(id = 15, title = "15", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Completed),
+        TodayNotification(id = 16, title = "16", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Completed),
+        TodayNotification(id = 17, title = "17", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Completed),
     )
 
     override fun getNotificationsForToday(): Flow<DataResult<List<TodayNotification>>> {

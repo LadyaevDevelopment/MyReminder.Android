@@ -62,6 +62,11 @@ fun Date.formatAsHoursMinutes(): String {
     return format.format(this)
 }
 
+fun Date.formatAsFullDayFullMonthFullYear(locale: Locale = Locale("ru")): String {
+    val format = SimpleDateFormat("dd MMMM yyyy", locale)
+    return format.format(this)
+}
+
 fun ViewPager2.reduceDragSensitivity(factor: Int) {
     val recyclerViewField = ViewPager2::class.java.getDeclaredField("mRecyclerView")
     recyclerViewField.isAccessible = true
@@ -71,4 +76,10 @@ fun ViewPager2.reduceDragSensitivity(factor: Int) {
     touchSlopField.isAccessible = true
     val touchSlop = touchSlopField.get(recyclerView) as Int
     touchSlopField.set(recyclerView, touchSlop * factor)
+}
+
+var ViewPager2.innerOverScrollMode: Int get() {
+    return (getChildAt(0) as RecyclerView).overScrollMode
+} set(value) {
+    (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
 }

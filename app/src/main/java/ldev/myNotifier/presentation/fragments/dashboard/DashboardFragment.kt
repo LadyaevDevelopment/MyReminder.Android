@@ -14,6 +14,7 @@ import ldev.myNotifier.presentation.fragments.settings.SettingsFragment
 import ldev.myNotifier.presentation.fragments.today.TodayFragment
 import ldev.myNotifier.presentation.fragments.all.AllFragment
 import ldev.myNotifier.utils.BaseFragment
+import ldev.myNotifier.utils.innerOverScrollMode
 import ldev.myNotifier.utils.reduceDragSensitivity
 import ldev.myNotifier.utils.reversed
 import ldev.myNotifier.utils.smoothScrollTo
@@ -38,30 +39,29 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.viewPager.adapter = object : FragmentStateAdapter(this@DashboardFragment) {
-            override fun getItemCount() = menuItems.size
-            override fun createFragment(position: Int): Fragment {
-                return menuItemsFragments[position]!!()
+        with(binding) {
+            viewPager.adapter = object : FragmentStateAdapter(this@DashboardFragment) {
+                override fun getItemCount() = menuItems.size
+                override fun createFragment(position: Int): Fragment {
+                    return menuItemsFragments[position]!!()
+                }
             }
-        }
-        binding.viewPager.isSaveEnabled = false
-        binding.viewPager.apply {
-            (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        }
-        binding.viewPager.reduceDragSensitivity(4)
+            viewPager.isSaveEnabled = false
+            viewPager.innerOverScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            viewPager.reduceDragSensitivity(4)
 
-        binding.bottomNavigation.setOnItemSelectedListener { menuItem ->
-            val newPosition = menuItems.reversed()[menuItem.itemId]!!
-            binding.viewPager.smoothScrollTo(newPosition)
-            true
-        }
-
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                binding.bottomNavigation.selectedItemId = menuItems[position]!!
+            bottomNavigation.setOnItemSelectedListener { menuItem ->
+                val newPosition = menuItems.reversed()[menuItem.itemId]!!
+                binding.viewPager.smoothScrollTo(newPosition)
+                true
             }
-        })
+
+            viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    binding.bottomNavigation.selectedItemId = menuItems[position]!!
+                }
+            })
+        }
     }
 
 }

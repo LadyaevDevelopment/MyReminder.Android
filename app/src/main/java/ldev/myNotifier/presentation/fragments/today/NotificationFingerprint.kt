@@ -47,12 +47,16 @@ class NotificationViewHolder(
         super.onBind(item)
         with(binding) {
             title.text = item.title
-            time.text = item.time.formatAsHoursMinutes()
             root.setCardBackgroundColor(when (item.status) {
                 TodayNotificationStatus.Completed -> root.context.getColor(R.color.limeGreen)
                 TodayNotificationStatus.Postponed -> root.context.getColor(R.color.brightRed)
                 TodayNotificationStatus.Pending -> root.context.getColor(R.color.bisque)
             })
+            time.text = if (item.status == TodayNotificationStatus.Postponed) {
+                "${item.initialTime.formatAsHoursMinutes()} ➝ ${item.time.formatAsHoursMinutes()}"
+            } else {
+                item.time.formatAsHoursMinutes()
+            }
         }
     }
 
