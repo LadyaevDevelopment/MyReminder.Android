@@ -92,33 +92,16 @@
                 android:text="Точное время" />
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/pickerLayout"
+        
+        <TextView
+            android:id="@+id/interval"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:text="Не выбрано"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/timeLayout"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <NumberPicker
-                android:id="@+id/hourPicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content" />
-
-            <NumberPicker
-                android:id="@+id/minutePicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
@@ -127,7 +110,7 @@
             android:padding="20dp"
             android:text="Сохранить"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/timeLayout"
+            app:layout_constraintTop_toBottomOf="@id/interval"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="1" />

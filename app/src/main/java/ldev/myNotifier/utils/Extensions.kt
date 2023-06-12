@@ -78,8 +78,12 @@ fun ViewPager2.reduceDragSensitivity(factor: Int) {
     touchSlopField.set(recyclerView, touchSlop * factor)
 }
 
-var ViewPager2.innerOverScrollMode: Int get() {
-    return (getChildAt(0) as RecyclerView).overScrollMode
-} set(value) {
-    (getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+var ViewPager2.innerOverScrollMode: Int
+    get() = (getChildAt(0) as RecyclerView).overScrollMode
+    set(value) {
+        (getChildAt(0) as RecyclerView).overScrollMode = value
+    }
+
+fun Number.atLeastTwoDigits(): String {
+    return String.format("%02d", this)
 }

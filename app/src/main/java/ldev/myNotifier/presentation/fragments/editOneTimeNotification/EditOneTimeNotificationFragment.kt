@@ -1,5 +1,8 @@
 package ldev.myNotifier.presentation.fragments.editOneTimeNotification
 
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Context.VIBRATOR_SERVICE
 import android.os.Build
@@ -9,14 +12,18 @@ import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.text.format.DateFormat
 import android.view.ViewGroup
 import android.widget.NumberPicker
-import ldev.myNotifier.R
 import ldev.myNotifier.databinding.FragmentEditOneTimeNotificationBinding
+import ldev.myNotifier.databinding.LayoutIntervalPickerBinding
 import ldev.myNotifier.utils.BaseFragment
+import ldev.myNotifier.utils.atLeastTwoDigits
+import ldev.myNotifier.utils.formatAsFullDayFullMonthFullYear
+import ldev.myNotifier.utils.formatAsHoursMinutes
+import java.util.Calendar
 
 class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotificationBinding>() {
 
@@ -27,6 +34,62 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.afterBtn.setOnClickListener {
+            val intervalPickerBinding = LayoutIntervalPickerBinding.inflate(LayoutInflater.from(requireContext()))
+
+            configureNumberPicker(intervalPickerBinding.hourPicker, 0, 23)
+            configureNumberPicker(intervalPickerBinding.minutePicker, 1, 59)
+
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Выберите интервал")
+            builder.setView(intervalPickerBinding.root)
+            builder.setPositiveButton("OK") { dialog, which ->
+                val hours = intervalPickerBinding.hourPicker.value
+                val minutes = intervalPickerBinding.minutePicker.value
+                binding.interval.text = run { "Через ${hours.atLeastTwoDigits()} : ${minutes.atLeastTwoDigits()}" }
+            }
+            builder.setNegativeButton("Отмена") { dialog, which ->
+                dialog.dismiss()
+            }
+            val dialog = builder.create()
+            dialog.show()
+        }
+
+        binding.exactTimeBtn.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val initialYear = calendar.get(Calendar.YEAR)
+            val initialMonth = calendar.get(Calendar.MONTH)
+            val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
+            val initialHour = calendar.get(Calendar.HOUR_OF_DAY)
+            val initialMinute = calendar.get(Calendar.MINUTE)
+
+            val datePickerDialog = DatePickerDialog(
+                requireContext(),
+                { _, year, monthOfYear, dayOfMonth ->
+                    val timePickerDialog = TimePickerDialog(
+                        requireContext(),
+                        { _, hourOfDay, minute ->
+                            val selectedDateTime = Calendar.getInstance()
+                            selectedDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
+                            binding.interval.text = run {
+                                "${selectedDateTime.time.formatAsFullDayFullMonthFullYear()}, ${selectedDateTime.time.formatAsHoursMinutes()}"
+                            }
+                        },
+                        initialHour,
+                        initialMinute,
+                        DateFormat.is24HourFormat(context)
+                    )
+                    timePickerDialog.show()
+                },
+                initialYear,
+                initialMonth,
+                initialDay
+            )
+            datePickerDialog.show()
+        }
+    }
+
+    private fun configureNumberPicker(picker: NumberPicker, minValue: Int, maxValue: Int) {
         val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             val vibratorManager = requireActivity().getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
             vibratorManager.defaultVibrator
@@ -41,17 +104,12 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
             vibrator.vibrate(effect)
         }
 
-        binding.hourPicker.minValue = 0
-        binding.hourPicker.maxValue = 23
-        binding.hourPicker.wrapSelectorWheel = false
-
-        binding.hourPicker.setOnValueChangedListener { _, _, _ ->
+        picker.minValue = minValue
+        picker.maxValue = maxValue
+        picker.wrapSelectorWheel = false
+        picker.setOnValueChangedListener { _, _, _ ->
             handler.post(vibrationRunnable)
         }
-
-        binding.minutePicker.minValue = 1
-        binding.minutePicker.maxValue = 59
-        binding.minutePicker.wrapSelectorWheel = false
     }
 
 }
