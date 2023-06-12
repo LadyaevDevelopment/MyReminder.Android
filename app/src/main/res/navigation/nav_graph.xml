@@ -30,7 +30,15 @@
         android:name="ldev.myNotifier.presentation.fragments.editOneTimeNotification.EditOneTimeNotificationFragment">
     </fragment>
     <action
-        android:id="@+id/actionGlobal_todayFragment_to_editOneTimeNotificationFragment"
+        android:id="@+id/actionGlobal_to_editOneTimeNotificationFragment"
         app:destination="@id/editOneTimeNotificationFragment" />
+
+    <fragment
+        android:id="@+id/editPeriodicNotificationFragment"
+        android:name="ldev.myNotifier.presentation.fragments.editPeriodicNotification.EditPeriodicNotificationFragment">
+    </fragment>
+    <action
+        android:id="@+id/actionGlobal_to_editPeriodicNotificationFragment"
+        app:destination="@id/editPeriodicNotificationFragment" />
 
 </navigation>

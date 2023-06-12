@@ -1,15 +1,10 @@
 package ldev.myNotifier.presentation.fragments.today
 
-import android.content.res.ColorStateList
-import android.graphics.Rect
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import ldev.myNotifier.R
 import ldev.myNotifier.databinding.TimeLineNotificationBinding
-import ldev.myNotifier.domain.entities.Notification
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.entities.TodayNotificationStatus
 import ldev.myNotifier.utils.formatAsHoursMinutes

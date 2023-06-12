@@ -54,7 +54,8 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.today.text = Date().formatAsFullDayFullMonthFullYear()
         binding.addNotificationBtn.setOnClickListener {
-            findNavController().navigate(NavGraphDirections.actionGlobalTodayFragmentToEditOneTimeNotificationFragment())
+            //findNavController().navigate(NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment())
+            findNavController().navigate(NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment())
         }
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {

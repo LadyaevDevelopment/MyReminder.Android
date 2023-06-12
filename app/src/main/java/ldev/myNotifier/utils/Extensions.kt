@@ -3,7 +3,10 @@ package ldev.myNotifier.utils
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
+import android.view.View
+import android.view.ViewParent
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -86,4 +89,31 @@ var ViewPager2.innerOverScrollMode: Int
 
 fun Number.atLeastTwoDigits(): String {
     return String.format("%02d", this)
+}
+
+private typealias FlowLayout = androidx.constraintlayout.helper.widget.Flow
+
+fun FlowLayout.addChildView(view: View) {
+    view.id = View.generateViewId()
+    var parentCL: ViewParent? = parent
+    while (parentCL != null && parentCL !is ConstraintLayout) {
+        parentCL = parent
+    }
+    if (parentCL == null) throw Exception("Cannot find ConstraintLayout widget")
+    val cl = parentCL as ConstraintLayout
+
+    cl.addView(view)
+    addView(view)
+}
+
+fun FlowLayout.removeChildView(view: View) {
+    var parentCL: ViewParent? = parent
+    while (parentCL != null && parentCL !is ConstraintLayout) {
+        parentCL = parent
+    }
+    if (parentCL == null) throw Exception("Cannot find ConstraintLayout widget")
+    val cl = parentCL as ConstraintLayout
+
+    cl.removeView(view)
+    removeView(view)
 }
