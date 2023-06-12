@@ -81,7 +81,6 @@
                 android:text="Через" />
 
             <Space
-                android:id="@+id/timeBtnSpace"
                 android:layout_width="8dp"
                 android:layout_height="wrap_content" />
 
@@ -94,13 +93,32 @@
 
         </LinearLayout>
 
-        <NumberPicker
-            android:id="@+id/intervalPicker"
+        <LinearLayout
+            android:id="@+id/pickerLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/timeLayout"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <NumberPicker
+                android:id="@+id/hourPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Space
+                android:layout_width="8dp"
+                android:layout_height="wrap_content" />
+
+            <NumberPicker
+                android:id="@+id/minutePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="0dp"
