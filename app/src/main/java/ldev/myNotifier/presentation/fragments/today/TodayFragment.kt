@@ -68,7 +68,6 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
                     outerDivider = dpToPixels(4)
                 )
             )
-            //addItemDecoration(HorizontalItemDecorator(dpToPixels(4)))
         }
     }
 

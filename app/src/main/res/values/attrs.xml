@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SettingsWidget">
+        <attr name="settingsWidget_icon" format="reference" />
+        <attr name="settingsWidget_title" format="string" />
+        <attr name="settingsWidget_bgColor" format="color" />
+    </declare-styleable>
+</resources>
