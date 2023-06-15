@@ -22,6 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:stretchColumns="*"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintEnd_toEndOf="parent">
@@ -30,22 +31,19 @@
 
             <ldev.myNotifier.presentation.fragments.settings.SettingsWidget
                 android:id="@+id/theme"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 app:settingsWidget_icon="@drawable/palette"
                 app:settingsWidget_title="App theme"
                 app:settingsWidget_bgColor="@color/limeGreen" />
 
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
-
             <ldev.myNotifier.presentation.fragments.settings.SettingsWidget
                 android:id="@+id/language"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 app:settingsWidget_icon="@drawable/language"
                 app:settingsWidget_title="App language"
@@ -61,22 +59,19 @@
 
             <ldev.myNotifier.presentation.fragments.settings.SettingsWidget
                 android:id="@+id/downloadConfig"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 app:settingsWidget_icon="@drawable/download"
                 app:settingsWidget_title="Download config"
                 app:settingsWidget_bgColor="@color/limeGreen" />
 
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
-
             <ldev.myNotifier.presentation.fragments.settings.SettingsWidget
                 android:id="@+id/uploadConfig"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 app:settingsWidget_icon="@drawable/upload"
                 app:settingsWidget_title="Upload config"
