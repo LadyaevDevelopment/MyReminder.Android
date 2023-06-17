@@ -10,6 +10,7 @@ import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.entities.TodayNotificationStatus
 import ldev.myNotifier.domain.repositories.NotificationRepository
+import ldev.myNotifier.domain.util.OperationResult
 import java.util.Date
 
 class NotificationMockRepository : NotificationRepository {
@@ -75,6 +76,12 @@ class NotificationMockRepository : NotificationRepository {
             emit(
                 DataResult(success = true, data = notifications[3])
             )
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun saveOneTimeNotification(notification: OneTimeNotification): Flow<OperationResult> {
+        return flow {
+            emit(OperationResult(success = true))
         }.flowOn(Dispatchers.IO)
     }
 

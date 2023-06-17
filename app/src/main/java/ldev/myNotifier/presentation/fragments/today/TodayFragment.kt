@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavGraph
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import ldev.myNotifier.NavGraphDirections
 import ldev.myNotifier.databinding.FragmentTodayBinding
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
-import ldev.myNotifier.utils.HorizontalItemDecorator
 import ldev.myNotifier.utils.VerticalItemDecorator
 import ldev.myNotifier.utils.dpToPixels
 import ldev.myNotifier.utils.formatAsFullDayFullMonthFullYear
@@ -41,10 +42,14 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         viewModel = ViewModelProvider(this, viewModelFactory)[TodayViewModel::class.java].apply {
             getNotifications()
         }
-        lifecycleScope.launchWhenStarted {
-            viewModel.state.observe(viewLifecycleOwner) {
-                lifecycleScope.launchWhenResumed {
-                    notificationAdapter.submitList(it.notifications)
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.observe(viewLifecycleOwner) { state ->
+                    lifecycleScope.launch {
+                        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            notificationAdapter.submitList(state.notifications)
+                        }
+                    }
                 }
             }
         }
@@ -54,8 +59,8 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.today.text = Date().formatAsFullDayFullMonthFullYear()
         binding.addNotificationBtn.setOnClickListener {
-            //findNavController().navigate(NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment())
-            findNavController().navigate(NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment())
+            findNavController().navigate(NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment())
+            //findNavController().navigate(NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment())
         }
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
