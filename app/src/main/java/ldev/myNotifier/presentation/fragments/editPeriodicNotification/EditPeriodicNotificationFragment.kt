@@ -76,7 +76,7 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
     }
 
     private fun subscribeToViewModel() {
-        viewModel.state.observe(viewLifecycleOwner) { state ->
+        viewModel.textState.observe(viewLifecycleOwner) { state ->
             lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     if (binding.titleInput.text.toString() != state.title) {
@@ -85,10 +85,16 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
                     if (binding.textInput.text.toString() != state.text) {
                         binding.textInput.setText(state.text)
                     }
+
+                }
+            }
+        }
+        viewModel.rulesState.observe(viewLifecycleOwner) { state ->
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     binding.checkAll.isChecked = state.allDaysOfWeekChecked
                     binding.controlButtons.isVisible = state.areControlButtonsVisible
 
-                    // days of week
                     binding.daysOfWeek.removeAllViews()
                     state.daysOfWeek.map { (dayOfWeek, dayOfWeekState) ->
                         layoutSections(dayOfWeek, dayOfWeekState.checked, dayOfWeekState.times)

@@ -15,25 +15,28 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     @Assisted private val notification: PeriodicNotification?
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(UiState.initial())
-    val state: LiveData<UiState> = _state
+    private val _textState = MutableLiveData(TextUiState.initial())
+    val textState: LiveData<TextUiState> = _textState
+
+    private val _rulesState = MutableLiveData(RulesUiState.initial())
+    val rulesState: LiveData<RulesUiState> = _rulesState
 
     fun setTitle(title: String) {
-        _state.postValue(_state.value!!.copy(
+        _textState.postValue(_textState.value!!.copy(
             title = title
         ))
     }
 
     fun setText(text: String) {
-        _state.postValue(_state.value!!.copy(
+        _textState.postValue(_textState.value!!.copy(
             text = text
         ))
     }
 
     fun markAll(checked: Boolean) {
-        _state.postValue(_state.value!!.copy(
+        _rulesState.postValue(_rulesState.value!!.copy(
             allDaysOfWeekChecked = checked,
-            daysOfWeek = _state.value!!.daysOfWeek.toMutableMap().apply {
+            daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
                 for ((dayOfWeek, _) in this) {
                     this[dayOfWeek] = this[dayOfWeek]!!.copy(checked = checked)
                 }
@@ -42,26 +45,26 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     }
 
     fun markDayOfWeek(dayOfWeek: String, checked: Boolean) {
-        val daysOfWeek = _state.value!!.daysOfWeek.toMutableMap().apply {
+        val daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
             this[dayOfWeek] = this[dayOfWeek]!!.copy(checked = checked)
         }
 
         val allDaysOfWeekChecked = when {
             daysOfWeek.all { it.value.checked } -> true
             daysOfWeek.all { !it.value.checked } -> false
-            else -> _state.value!!.allDaysOfWeekChecked
+            else -> _rulesState.value!!.allDaysOfWeekChecked
         }
 
-        _state.postValue(_state.value!!.copy(
+        _rulesState.postValue(_rulesState.value!!.copy(
             allDaysOfWeekChecked = allDaysOfWeekChecked,
             daysOfWeek = daysOfWeek
         ))
     }
 
     fun addTimeToDayOfWeek(dayOfWeek: String, time: Time) {
-        val dayOfWeekData = _state.value!!.daysOfWeek[dayOfWeek]!!
-        _state.postValue(_state.value!!.copy(
-            daysOfWeek = _state.value!!.daysOfWeek.toMutableMap().apply {
+        val dayOfWeekData = _rulesState.value!!.daysOfWeek[dayOfWeek]!!
+        _rulesState.postValue(_rulesState.value!!.copy(
+            daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
                 this[dayOfWeek] = dayOfWeekData.copy(
                     times = dayOfWeekData.times.toMutableList().apply {
                         add(Time(hour = time.hour, minute = time.minute))
@@ -72,8 +75,8 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     }
 
     fun addTimeToAll(time: Time) {
-        _state.postValue(_state.value!!.copy(
-            daysOfWeek = _state.value!!.daysOfWeek.toMutableMap().apply {
+        _rulesState.postValue(_rulesState.value!!.copy(
+            daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
                 for ((dayOfWeek, dayOfWeekState) in this) {
                     this[dayOfWeek] = dayOfWeekState.copy(
                         times = dayOfWeekState.times.toMutableList().apply {
@@ -86,9 +89,9 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     }
 
     fun removeTimeFromDayOfWeek(dayOfWeek: String, time: Time) {
-        val dayOfWeekData = _state.value!!.daysOfWeek[dayOfWeek]!!
-        _state.postValue(_state.value!!.copy(
-            daysOfWeek = _state.value!!.daysOfWeek.toMutableMap().apply {
+        val dayOfWeekData = _rulesState.value!!.daysOfWeek[dayOfWeek]!!
+        _rulesState.postValue(_rulesState.value!!.copy(
+            daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
                 this[dayOfWeek] = dayOfWeekData.copy(
                     times = dayOfWeekData.times.toMutableList().apply {
                         remove(time)
@@ -99,8 +102,8 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     }
 
     fun clearSelectedDaysOfWeek() {
-        _state.postValue(_state.value!!.copy(
-            daysOfWeek = _state.value!!.daysOfWeek.toMutableMap().apply {
+        _rulesState.postValue(_rulesState.value!!.copy(
+            daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
                 for ((dayOfWeek, dayOfWeekState) in this) {
                     if (dayOfWeekState.checked) {
                         this[dayOfWeek] = dayOfWeekState.copy(
@@ -119,19 +122,28 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         }
     }
 
-    data class UiState(
+    data class TextUiState(
         val title: String,
         val text: String,
+        val errorMessage: String?
+    ) {
+        companion object {
+            fun initial() : TextUiState = TextUiState(
+                title = "",
+                text = "",
+                errorMessage = null
+            )
+        }
+    }
+
+    data class RulesUiState(
         val allDaysOfWeekChecked: Boolean,
         val daysOfWeek: Map<String, DayOfWeekState>,
-        val errorMessage: String?
     ) {
         val areControlButtonsVisible: Boolean get() = daysOfWeek.any { it.value.checked }
 
         companion object {
-            fun initial() : UiState = UiState(
-                title = "",
-                text = "",
+            fun initial() : RulesUiState = RulesUiState(
                 allDaysOfWeekChecked = false,
                 daysOfWeek = arrayOf(
                     Pair("ПН", DayOfWeekState(checked = false, times = listOf())),
@@ -142,7 +154,6 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
                     Pair("СБ", DayOfWeekState(checked = false, times = listOf())),
                     Pair("ВС", DayOfWeekState(checked = false, times = listOf())),
                 ).associate { it },
-                errorMessage = null
             )
         }
     }
