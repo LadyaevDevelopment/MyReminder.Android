@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.flowOn
 import ldev.myNotifier.domain.util.DataResult
 import ldev.myNotifier.domain.entities.Notification
 import ldev.myNotifier.domain.entities.OneTimeNotification
+import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.entities.TodayNotificationStatus
 import ldev.myNotifier.domain.repositories.NotificationRepository
@@ -80,6 +81,12 @@ class NotificationMockRepository : NotificationRepository {
     }
 
     override fun saveOneTimeNotification(notification: OneTimeNotification): Flow<OperationResult> {
+        return flow {
+            emit(OperationResult(success = true))
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun savePeriodicNotification(notification: PeriodicNotification): Flow<OperationResult> {
         return flow {
             emit(OperationResult(success = true))
         }.flowOn(Dispatchers.IO)

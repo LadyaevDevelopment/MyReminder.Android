@@ -57,16 +57,19 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
         super.onViewCreated(view, savedInstanceState)
 
         binding.titleInput.addTextChangedListener {
-            viewModel.setTitle(it!!.toString())
+            viewModel.setTitle(it.toString())
         }
         binding.textInput.addTextChangedListener {
-            viewModel.setText(it!!.toString())
+            viewModel.setText(it.toString())
         }
         binding.afterBtn.setOnClickListener {
             showIntervalPicker()
         }
         binding.exactTimeBtn.setOnClickListener {
             showDateTimePicker()
+        }
+        binding.saveBtn.setOnClickListener {
+            viewModel.save()
         }
         subscribeToViewModel()
     }
@@ -78,7 +81,7 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
                     if (binding.titleInput.text.toString() != state.title) {
                         binding.titleInput.setText(state.title)
                     }
-                    if (binding.textInput.text.toString() != state.title) {
+                    if (binding.textInput.text.toString() != state.text) {
                         binding.textInput.setText(state.text)
                     }
                     binding.interval.text = when (state.notificationTime) {

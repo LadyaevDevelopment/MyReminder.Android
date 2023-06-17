@@ -6,6 +6,7 @@ import dagger.Component
 import ldev.myNotifier.presentation.MainActivity
 import ldev.myNotifier.presentation.fragments.all.AllFragment
 import ldev.myNotifier.presentation.fragments.editOneTimeNotification.EditOneTimeNotificationFragment
+import ldev.myNotifier.presentation.fragments.editPeriodicNotification.EditPeriodicNotificationFragment
 import ldev.myNotifier.presentation.fragments.settings.SettingsFragment
 import ldev.myNotifier.presentation.fragments.today.TodayFragment
 import javax.inject.Singleton
@@ -19,6 +20,7 @@ interface AppComponent {
     fun inject(fragment: AllFragment)
     fun inject(fragment: SettingsFragment)
     fun inject(fragment: EditOneTimeNotificationFragment)
+    fun inject(fragment: EditPeriodicNotificationFragment)
 
     @Component.Builder
     interface Builder {
