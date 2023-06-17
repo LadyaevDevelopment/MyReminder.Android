@@ -17,6 +17,7 @@ import android.view.View
 import android.text.format.DateFormat
 import android.view.ViewGroup
 import android.widget.NumberPicker
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -50,93 +51,109 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+    }
 
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.observe(viewLifecycleOwner) { state ->
-                    lifecycleScope.launch {
-                        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            binding.titleInput.setText(state.title)
-                            binding.textInput.setText(state.text)
-                            binding.interval.text = when (state.notificationTime) {
-                                is EditOneTimeNotificationViewModel.NotificationTime.DateTime -> {
-                                    val date = state.notificationTime.dateTime
-                                    "${date.formatAsFullDayFullMonthFullYear()}, ${date.formatAsHoursMinutes()}"
-                                }
-                                is EditOneTimeNotificationViewModel.NotificationTime.Interval -> {
-                                    val interval = state.notificationTime
-                                    "Через ${interval.hours.atLeastTwoDigits()} : ${interval.minutes.atLeastTwoDigits()}"
-                                }
-                                null -> "Время не выбрано"
-                            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.titleInput.addTextChangedListener {
+            viewModel.setTitle(it!!.toString())
+        }
+        binding.textInput.addTextChangedListener {
+            viewModel.setText(it!!.toString())
+        }
+        binding.afterBtn.setOnClickListener {
+            showIntervalPicker()
+        }
+        binding.exactTimeBtn.setOnClickListener {
+            showDateTimePicker()
+        }
+        subscribeToViewModel()
+    }
+
+    private fun subscribeToViewModel() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    if (binding.titleInput.text.toString() != state.title) {
+                        binding.titleInput.setText(state.title)
+                    }
+                    if (binding.textInput.text.toString() != state.title) {
+                        binding.textInput.setText(state.text)
+                    }
+                    binding.interval.text = when (state.notificationTime) {
+                        is EditOneTimeNotificationViewModel.NotificationTime.DateTime -> {
+                            val date = state.notificationTime.dateTime
+                            "${date.formatAsFullDayFullMonthFullYear()}, ${date.formatAsHoursMinutes()}"
                         }
+                        is EditOneTimeNotificationViewModel.NotificationTime.Interval -> {
+                            val interval = state.notificationTime
+                            "Через ${interval.hours.atLeastTwoDigits()} : ${interval.minutes.atLeastTwoDigits()}"
+                        }
+                        null -> "Время не выбрано"
                     }
                 }
             }
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun showIntervalPicker() {
+        val intervalPickerBinding = LayoutIntervalPickerBinding.inflate(LayoutInflater.from(requireContext()))
 
-        binding.afterBtn.setOnClickListener {
-            val intervalPickerBinding = LayoutIntervalPickerBinding.inflate(LayoutInflater.from(requireContext()))
+        configureNumberPicker(intervalPickerBinding.hourPicker, 0, 23)
+        configureNumberPicker(intervalPickerBinding.minutePicker, 1, 59)
 
-            configureNumberPicker(intervalPickerBinding.hourPicker, 0, 23)
-            configureNumberPicker(intervalPickerBinding.minutePicker, 1, 59)
-
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Выберите интервал")
-            builder.setView(intervalPickerBinding.root)
-            builder.setPositiveButton("OK") { dialog, which ->
-                viewModel.setNotificationTime(
-                    EditOneTimeNotificationViewModel.NotificationTime.Interval(
-                        hours = intervalPickerBinding.hourPicker.value,
-                        minutes = intervalPickerBinding.minutePicker.value
-                    )
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Выберите интервал")
+        builder.setView(intervalPickerBinding.root)
+        builder.setPositiveButton("OK") { dialog, which ->
+            viewModel.setNotificationTime(
+                EditOneTimeNotificationViewModel.NotificationTime.Interval(
+                    hours = intervalPickerBinding.hourPicker.value,
+                    minutes = intervalPickerBinding.minutePicker.value
                 )
-            }
-            builder.setNegativeButton("Отмена") { dialog, which ->
-                dialog.dismiss()
-            }
-            val dialog = builder.create()
-            dialog.show()
-        }
-
-        binding.exactTimeBtn.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val initialYear = calendar.get(Calendar.YEAR)
-            val initialMonth = calendar.get(Calendar.MONTH)
-            val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
-            val initialHour = calendar.get(Calendar.HOUR_OF_DAY)
-            val initialMinute = calendar.get(Calendar.MINUTE)
-
-            val datePickerDialog = DatePickerDialog(
-                requireContext(),
-                { _, year, monthOfYear, dayOfMonth ->
-                    val timePickerDialog = TimePickerDialog(
-                        requireContext(),
-                        { _, hourOfDay, minute ->
-                            val selectedDateTime = Calendar.getInstance()
-                            selectedDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
-                            viewModel.setNotificationTime(
-                                EditOneTimeNotificationViewModel.NotificationTime.DateTime(
-                                    dateTime = selectedDateTime.time
-                                )
-                            )
-                        },
-                        initialHour,
-                        initialMinute,
-                        DateFormat.is24HourFormat(context)
-                    )
-                    timePickerDialog.show()
-                },
-                initialYear,
-                initialMonth,
-                initialDay
             )
-            datePickerDialog.show()
         }
+        builder.setNegativeButton("Отмена") { dialog, which ->
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun showDateTimePicker() {
+        val calendar = Calendar.getInstance()
+        val initialYear = calendar.get(Calendar.YEAR)
+        val initialMonth = calendar.get(Calendar.MONTH)
+        val initialDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val initialHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val initialMinute = calendar.get(Calendar.MINUTE)
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, year, monthOfYear, dayOfMonth ->
+                val timePickerDialog = TimePickerDialog(
+                    requireContext(),
+                    { _, hourOfDay, minute ->
+                        val selectedDateTime = Calendar.getInstance()
+                        selectedDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
+                        viewModel.setNotificationTime(
+                            EditOneTimeNotificationViewModel.NotificationTime.DateTime(
+                                dateTime = selectedDateTime.time
+                            )
+                        )
+                    },
+                    initialHour,
+                    initialMinute,
+                    DateFormat.is24HourFormat(context)
+                )
+                timePickerDialog.show()
+            },
+            initialYear,
+            initialMonth,
+            initialDay
+        )
+        datePickerDialog.show()
     }
 
     private fun configureNumberPicker(picker: NumberPicker, minValue: Int, maxValue: Int) {
