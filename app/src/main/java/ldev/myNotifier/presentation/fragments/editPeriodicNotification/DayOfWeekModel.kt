@@ -1,15 +1,15 @@
 package ldev.myNotifier.presentation.fragments.editPeriodicNotification
 
+import ldev.myNotifier.domain.entities.Time
 import java.time.DayOfWeek
 
 data class DayOfWeekModel(
     val dayOfWeek: DayOfWeek,
     val isChecked: Boolean,
-    val times: List<NotificationTime>
+    val times: List<NotificationTimeModel>
 )
 
-data class NotificationTime(
-    val id: Int,
-    val hour: Int,
-    val minute: Int
+data class NotificationTimeModel(
+    val id: Long,
+    val time: Time
 )

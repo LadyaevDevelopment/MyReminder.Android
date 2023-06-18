@@ -15,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ldev.myNotifier.databinding.FragmentEditPeriodicNotificationBinding
+import ldev.myNotifier.domain.entities.Time
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.VerticalItemDecorator
@@ -37,13 +38,10 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
     private var _daysOfWeekAdapter: FingerprintAdapter? = FingerprintAdapter(listOf(
         DayOfWeekFingerprint(
             onAddButtonTapped = fun (dayOfWeek) {
-                showTimePicker { hour, minute ->
+                showTimePicker { time ->
                     viewModel.addTimeToDayOfWeek(
                         dayOfWeek,
-                        EditPeriodicNotificationViewModel.Time(
-                            hour = hour,
-                            minute = minute
-                        )
+                        time
                     )
                 }
             },
@@ -53,7 +51,7 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
             onRemoveTime = fun (dayOfWeek, time) {
                 viewModel.removeTimeFromDayOfWeek(
                     dayOfWeek,
-                    EditPeriodicNotificationViewModel.Time(hour = time.hour, minute = time.minute)
+                    time.time
                 )
             },
         )
@@ -92,24 +90,22 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
             viewModel.markAll(isChecked)
         }
         binding.addBtn.setOnClickListener {
-            showTimePicker { hour, minute ->
-                viewModel.addTimeToAllSelected(
-                    EditPeriodicNotificationViewModel.Time(
-                        hour = hour,
-                        minute = minute
-                    )
-                )
+            showTimePicker { time ->
+                viewModel.addTimeToAllSelected(time)
             }
         }
         binding.removeBtn.setOnClickListener {
             viewModel.clearSelectedDaysOfWeek()
+        }
+        binding.saveBtn.setOnClickListener {
+            viewModel.save()
         }
 
         subscribeToViewModel()
     }
 
     private fun subscribeToViewModel() {
-        viewModel.textState.observe(viewLifecycleOwner) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     if (binding.titleInput.text.toString() != state.title) {
@@ -118,23 +114,14 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
                     if (binding.textInput.text.toString() != state.text) {
                         binding.textInput.setText(state.text)
                     }
-                }
-            }
-        }
-        viewModel.rulesState.observe(viewLifecycleOwner) { state ->
-            lifecycleScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                     binding.checkAll.isChecked = state.allDaysOfWeekChecked
                     binding.controlButtons.isVisible = state.areControlButtonsVisible
-
                     daysOfWeekAdapter.submitList(
                         state.daysOfWeek.map { (dayOfWeek, dayOfWeekState) ->
                             DayOfWeekModel(
                                 dayOfWeek = dayOfWeek,
                                 isChecked = dayOfWeekState.checked,
-                                times = dayOfWeekState.times.map {
-                                    NotificationTime(id = 0, hour = it.hour, minute = it.minute)
-                                }
+                                times = dayOfWeekState.times
                             )
                         }
                     )
@@ -143,14 +130,14 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         }
     }
 
-    private fun showTimePicker(onAddTime: (hour: Int, minute: Int) -> Unit) {
+    private fun showTimePicker(onAddTime: (time: Time) -> Unit) {
         val calendar = Calendar.getInstance()
         val initialHour = calendar.get(Calendar.HOUR_OF_DAY)
         val initialMinute = calendar.get(Calendar.MINUTE)
         val timePickerDialog = TimePickerDialog(
             requireContext(),
             { _, hour, minute ->
-                onAddTime(hour, minute)
+                onAddTime(Time(hour = hour, minute = minute))
             },
             initialHour,
             initialMinute,

@@ -121,7 +121,6 @@ fun FlowLayout.removeChildView(view: View) {
     removeView(view)
 }
 
-@get:StringRes
 val DayOfWeek.shortNameResourceId: Int get() {
     return when (this) {
         DayOfWeek.MONDAY -> R.string.short_monday

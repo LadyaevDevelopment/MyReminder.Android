@@ -21,7 +21,7 @@ import java.time.DayOfWeek
 class DayOfWeekFingerprint(
     private val onAddButtonTapped: (dayOfWeek: DayOfWeek) -> Unit,
     private val onMarkItem: (dayOfWeek: DayOfWeek, isChecked: Boolean) -> Unit,
-    private val onRemoveTime: (dayOfWeek: DayOfWeek, time: NotificationTime) -> Unit,
+    private val onRemoveTime: (dayOfWeek: DayOfWeek, time: NotificationTimeModel) -> Unit,
 ) : ItemFingerprint<LayoutDayOfWeekBinding, DayOfWeekModel> {
 
     override fun isRelativeItem(item: Any) = item is DayOfWeekModel
@@ -55,7 +55,7 @@ class DayOfWeekViewHolder(
     binding: LayoutDayOfWeekBinding,
     private val onAddButtonTapped: (dayOfWeek: DayOfWeek) -> Unit,
     private val onMarkItem: (dayOfWeek: DayOfWeek, isChecked: Boolean) -> Unit,
-    private val onRemoveTime: (dayOfWeek: DayOfWeek, time: NotificationTime) -> Unit,
+    private val onRemoveTime: (dayOfWeek: DayOfWeek, time: NotificationTimeModel) -> Unit,
 ) : BaseViewHolder<LayoutDayOfWeekBinding, DayOfWeekModel>(binding) {
 
     init {
@@ -81,13 +81,17 @@ class DayOfWeekViewHolder(
         super.onBind(item)
         if (payloads.contains(NeedToChangeButtonFlow)) {
             with (binding) {
-                buttons.isVisible = item.times.isNotEmpty()
+                if (item.times.isEmpty()) {
+                    buttons.isGone = true
+                } else {
+                    buttons.isVisible = true
+                }
                 for (viewId in buttons.referencedIds) {
                     buttons.removeChildView(root.findViewById(viewId))
                 }
-                for (time in item.times) {
+                for (time in item.times.sortedBy { it.time }) {
                     buttons.addChildView(createButton(binding.root.context).apply {
-                        text = run { "${time.hour.atLeastTwoDigits()} : ${time.minute.atLeastTwoDigits()}" }
+                        text = run { "${time.time.hour.atLeastTwoDigits()} : ${time.time.minute.atLeastTwoDigits()}" }
                         setOnClickListener {
                             onRemoveTime(item.dayOfWeek, time)
                         }
