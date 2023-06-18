@@ -1,8 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MyNotifier</string>
     <string name="bottomNavigationMenu_today">today</string>
     <string name="bottomNavigationMenu_all">all</string>
     <string name="bottomNavigationMenu_settings">settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="short_monday">MON</string>
+    <string name="short_tuesday">TUE</string>
+    <string name="short_wednesday">WED</string>
+    <string name="short_thursday">THU</string>
+    <string name="short_friday">FRI</string>
+    <string name="short_saturday">SAT</string>
+    <string name="short_sunday">SUN</string>
 </resources>

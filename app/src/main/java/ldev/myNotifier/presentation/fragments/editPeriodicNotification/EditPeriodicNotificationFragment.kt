@@ -23,6 +23,8 @@ import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.addChildView
 import ldev.myNotifier.utils.atLeastTwoDigits
 import ldev.myNotifier.utils.dpToPixels
+import ldev.myNotifier.utils.shortNameResourceId
+import java.time.DayOfWeek
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -104,18 +106,18 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         }
     }
 
-    private fun layoutSections(name: String, checked: Boolean, timeButtons: List<EditPeriodicNotificationViewModel.Time>) {
+    private fun layoutSections(dayOfWeek: DayOfWeek, checked: Boolean, timeButtons: List<EditPeriodicNotificationViewModel.Time>) {
         val viewBinding = LayoutDayOfWeekBinding.inflate(LayoutInflater.from(requireContext()))
-        viewBinding.title.text = name
+        viewBinding.title.text = getString(dayOfWeek.shortNameResourceId)
         viewBinding.buttons.isGone = true
         viewBinding.check.isChecked = checked
         viewBinding.check.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.markDayOfWeek(name, isChecked)
+            viewModel.markDayOfWeek(dayOfWeek, isChecked)
         }
         viewBinding.addBtn.setOnClickListener {
             showTimePicker { hour, minute ->
                 viewModel.addTimeToDayOfWeek(
-                    name,
+                    dayOfWeek,
                     EditPeriodicNotificationViewModel.Time(
                         hour = hour,
                         minute = minute
@@ -128,7 +130,7 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
             viewBinding.buttons.addChildView(createButton().apply {
                 text = run { "${time.hour.atLeastTwoDigits()} : ${time.minute.atLeastTwoDigits()}" }
                 setOnClickListener {
-                    viewModel.removeTimeFromDayOfWeek(name, time)
+                    viewModel.removeTimeFromDayOfWeek(dayOfWeek, time)
                 }
             })
         }

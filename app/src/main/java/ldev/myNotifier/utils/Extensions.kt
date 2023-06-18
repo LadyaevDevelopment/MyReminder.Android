@@ -6,11 +6,14 @@ import android.content.Context
 import android.view.View
 import android.view.ViewParent
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import ldev.myNotifier.R
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
 import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
@@ -116,4 +119,17 @@ fun FlowLayout.removeChildView(view: View) {
 
     cl.removeView(view)
     removeView(view)
+}
+
+@get:StringRes
+val DayOfWeek.shortNameResourceId: Int get() {
+    return when (this) {
+        DayOfWeek.MONDAY -> R.string.short_monday
+        DayOfWeek.TUESDAY -> R.string.short_tuesday
+        DayOfWeek.WEDNESDAY -> R.string.short_wednesday
+        DayOfWeek.THURSDAY -> R.string.short_thursday
+        DayOfWeek.FRIDAY -> R.string.short_friday
+        DayOfWeek.SATURDAY -> R.string.short_saturday
+        DayOfWeek.SUNDAY -> R.string.short_sunday
+    }
 }

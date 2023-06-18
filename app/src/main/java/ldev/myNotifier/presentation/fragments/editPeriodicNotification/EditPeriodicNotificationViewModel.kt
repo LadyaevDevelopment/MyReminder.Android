@@ -9,6 +9,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.repositories.NotificationRepository
+import java.time.DayOfWeek
 
 class EditPeriodicNotificationViewModel @AssistedInject constructor(
     private val notificationRepository: NotificationRepository,
@@ -44,7 +45,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         ))
     }
 
-    fun markDayOfWeek(dayOfWeek: String, checked: Boolean) {
+    fun markDayOfWeek(dayOfWeek: DayOfWeek, checked: Boolean) {
         val daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
             this[dayOfWeek] = this[dayOfWeek]!!.copy(checked = checked)
         }
@@ -61,7 +62,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         ))
     }
 
-    fun addTimeToDayOfWeek(dayOfWeek: String, time: Time) {
+    fun addTimeToDayOfWeek(dayOfWeek: DayOfWeek, time: Time) {
         val dayOfWeekData = _rulesState.value!!.daysOfWeek[dayOfWeek]!!
         _rulesState.postValue(_rulesState.value!!.copy(
             daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
@@ -88,7 +89,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         ))
     }
 
-    fun removeTimeFromDayOfWeek(dayOfWeek: String, time: Time) {
+    fun removeTimeFromDayOfWeek(dayOfWeek: DayOfWeek, time: Time) {
         val dayOfWeekData = _rulesState.value!!.daysOfWeek[dayOfWeek]!!
         _rulesState.postValue(_rulesState.value!!.copy(
             daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
@@ -138,7 +139,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
 
     data class RulesUiState(
         val allDaysOfWeekChecked: Boolean,
-        val daysOfWeek: Map<String, DayOfWeekState>,
+        val daysOfWeek: Map<DayOfWeek, DayOfWeekState>,
     ) {
         val areControlButtonsVisible: Boolean get() = daysOfWeek.any { it.value.checked }
 
@@ -146,13 +147,13 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
             fun initial() : RulesUiState = RulesUiState(
                 allDaysOfWeekChecked = false,
                 daysOfWeek = arrayOf(
-                    Pair("ПН", DayOfWeekState(checked = false, times = listOf())),
-                    Pair("ВТ", DayOfWeekState(checked = false, times = listOf())),
-                    Pair("СР", DayOfWeekState(checked = false, times = listOf())),
-                    Pair("ЧТ", DayOfWeekState(checked = false, times = listOf())),
-                    Pair("ПТ", DayOfWeekState(checked = false, times = listOf())),
-                    Pair("СБ", DayOfWeekState(checked = false, times = listOf())),
-                    Pair("ВС", DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.MONDAY, DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.TUESDAY, DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.WEDNESDAY, DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.THURSDAY, DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.FRIDAY, DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.SATURDAY, DayOfWeekState(checked = false, times = listOf())),
+                    Pair(DayOfWeek.SUNDAY, DayOfWeekState(checked = false, times = listOf())),
                 ).associate { it },
             )
         }
