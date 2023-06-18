@@ -74,7 +74,11 @@ class DayOfWeekViewHolder(
         with (binding) {
             title.text = binding.root.context.getString(item.dayOfWeek.shortNameResourceId)
             check.isChecked = item.isChecked
-            buttons.isGone = true
+            if (item.times.isEmpty()) {
+                buttons.isGone = true
+            } else {
+                buttons.isVisible = true
+            }
         }
     }
 
