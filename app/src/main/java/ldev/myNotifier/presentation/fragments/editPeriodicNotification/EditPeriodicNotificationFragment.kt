@@ -6,25 +6,20 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ldev.myNotifier.databinding.FragmentEditPeriodicNotificationBinding
-import ldev.myNotifier.databinding.LayoutDayOfWeekBinding
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
-import ldev.myNotifier.utils.addChildView
-import ldev.myNotifier.utils.atLeastTwoDigits
+import ldev.myNotifier.utils.VerticalItemDecorator
 import ldev.myNotifier.utils.dpToPixels
-import ldev.myNotifier.utils.shortNameResourceId
-import java.time.DayOfWeek
+import ldev.myNotifier.utils.recyclerView.FingerprintAdapter
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -39,6 +34,32 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         )
     }
 
+    private var _daysOfWeekAdapter: FingerprintAdapter? = FingerprintAdapter(listOf(
+        DayOfWeekFingerprint(
+            onAddButtonTapped = fun (dayOfWeek) {
+                showTimePicker { hour, minute ->
+                    viewModel.addTimeToDayOfWeek(
+                        dayOfWeek,
+                        EditPeriodicNotificationViewModel.Time(
+                            hour = hour,
+                            minute = minute
+                        )
+                    )
+                }
+            },
+            onMarkItem = fun (dayOfWeek, isChecked) {
+                viewModel.markDayOfWeek(dayOfWeek, isChecked)
+            },
+            onRemoveTime = fun (dayOfWeek, time) {
+                viewModel.removeTimeFromDayOfWeek(
+                    dayOfWeek,
+                    EditPeriodicNotificationViewModel.Time(hour = time.hour, minute = time.minute)
+                )
+            },
+        )
+    ))
+    private val daysOfWeekAdapter = _daysOfWeekAdapter!!
+
     override fun getContentInflater(): (LayoutInflater, ViewGroup?, Boolean) -> FragmentEditPeriodicNotificationBinding {
         return FragmentEditPeriodicNotificationBinding::inflate
     }
@@ -50,6 +71,16 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.daysOfWeek.itemAnimator = null
+        binding.daysOfWeek.adapter = daysOfWeekAdapter
+        binding.daysOfWeek.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.daysOfWeek.addItemDecoration(
+            VerticalItemDecorator(
+                innerDivider = dpToPixels(8),
+                outerDivider = dpToPixels(0)
+            )
+        )
 
         binding.titleInput.addTextChangedListener {
             viewModel.setTitle(it.toString())
@@ -87,7 +118,6 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
                     if (binding.textInput.text.toString() != state.text) {
                         binding.textInput.setText(state.text)
                     }
-
                 }
             }
         }
@@ -97,47 +127,21 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
                     binding.checkAll.isChecked = state.allDaysOfWeekChecked
                     binding.controlButtons.isVisible = state.areControlButtonsVisible
 
-                    binding.daysOfWeek.removeAllViews()
-                    state.daysOfWeek.map { (dayOfWeek, dayOfWeekState) ->
-                        layoutSections(dayOfWeek, dayOfWeekState.checked, dayOfWeekState.times)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun layoutSections(dayOfWeek: DayOfWeek, checked: Boolean, timeButtons: List<EditPeriodicNotificationViewModel.Time>) {
-        val viewBinding = LayoutDayOfWeekBinding.inflate(LayoutInflater.from(requireContext()))
-        viewBinding.title.text = getString(dayOfWeek.shortNameResourceId)
-        viewBinding.buttons.isGone = true
-        viewBinding.check.isChecked = checked
-        viewBinding.check.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.markDayOfWeek(dayOfWeek, isChecked)
-        }
-        viewBinding.addBtn.setOnClickListener {
-            showTimePicker { hour, minute ->
-                viewModel.addTimeToDayOfWeek(
-                    dayOfWeek,
-                    EditPeriodicNotificationViewModel.Time(
-                        hour = hour,
-                        minute = minute
+                    daysOfWeekAdapter.submitList(
+                        state.daysOfWeek.map { (dayOfWeek, dayOfWeekState) ->
+                            DayOfWeekModel(
+                                dayOfWeek = dayOfWeek,
+                                isChecked = dayOfWeekState.checked,
+                                times = dayOfWeekState.times.map {
+                                    NotificationTime(id = 0, hour = it.hour, minute = it.minute)
+                                }
+                            )
+                        }
                     )
-                )
+                }
             }
         }
-        viewBinding.buttons.isVisible = timeButtons.isNotEmpty()
-        for (time in timeButtons) {
-            viewBinding.buttons.addChildView(createButton().apply {
-                text = run { "${time.hour.atLeastTwoDigits()} : ${time.minute.atLeastTwoDigits()}" }
-                setOnClickListener {
-                    viewModel.removeTimeFromDayOfWeek(dayOfWeek, time)
-                }
-            })
-        }
-        binding.daysOfWeek.addView(viewBinding.root)
-        (viewBinding.root.layoutParams as MarginLayoutParams).bottomMargin = dpToPixels(8)
     }
-
 
     private fun showTimePicker(onAddTime: (hour: Int, minute: Int) -> Unit) {
         val calendar = Calendar.getInstance()
@@ -155,16 +159,9 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         timePickerDialog.show()
     }
 
-    private fun createButton(): MaterialButton {
-        val button = MaterialButton(requireContext())
-        button.minWidth = 0
-        button.minHeight = 0
-        button.minimumWidth = 0
-        button.minimumHeight = 0
-        button.outlineProvider = null
-        button.insetTop = 0
-        button.insetBottom = 0
-        return button
+    override fun onDestroy() {
+        _daysOfWeekAdapter = null
+        super.onDestroy()
     }
 
 }

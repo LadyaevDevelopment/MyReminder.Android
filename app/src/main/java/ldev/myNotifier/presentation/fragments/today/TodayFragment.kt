@@ -67,6 +67,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
                 isSmoothScrollbarEnabled = false
             }
             adapter = notificationAdapter
+            itemAnimator = null
             addItemDecoration(
                 VerticalItemDecorator(
                     innerDivider = dpToPixels(4),
@@ -77,8 +78,8 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         _notificationAdapter = null
+        super.onDestroy()
     }
 
 }
