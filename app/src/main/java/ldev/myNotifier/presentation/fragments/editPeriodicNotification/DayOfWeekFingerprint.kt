@@ -43,6 +43,7 @@ class DayOfWeekFingerprint(
         override fun areContentsTheSame(oldItem: DayOfWeekModel, newItem: DayOfWeekModel) = oldItem == newItem
         override fun getChangePayload(oldItem: DayOfWeekModel, newItem: DayOfWeekModel): Any? {
             if (oldItem.times != newItem.times) return NeedToChangeButtonFlow
+            if (oldItem.isChecked != newItem.isChecked) return NeedToChangeChecked
             return super.getChangePayload(oldItem, newItem)
         }
     }
@@ -50,6 +51,7 @@ class DayOfWeekFingerprint(
 }
 
 object NeedToChangeButtonFlow
+object NeedToChangeChecked
 
 class DayOfWeekViewHolder(
     binding: LayoutDayOfWeekBinding,
@@ -73,37 +75,44 @@ class DayOfWeekViewHolder(
         super.onBind(item)
         with (binding) {
             title.text = binding.root.context.getString(item.dayOfWeek.shortNameResourceId)
-            check.isChecked = item.isChecked
-            if (item.times.isEmpty()) {
-                buttons.isGone = true
-            } else {
-                buttons.isVisible = true
-            }
+            setupButtonFlow()
+            setChecked()
         }
     }
 
     override fun onBind(item: DayOfWeekModel, payloads: List<Any>) {
         super.onBind(item)
         if (payloads.contains(NeedToChangeButtonFlow)) {
-            with (binding) {
-                if (item.times.isEmpty()) {
-                    buttons.isGone = true
-                } else {
-                    buttons.isVisible = true
-                }
-                for (viewId in buttons.referencedIds) {
-                    buttons.removeChildView(root.findViewById(viewId))
-                }
-                for (time in item.times.sortedBy { it.time }) {
-                    buttons.addChildView(createButton(binding.root.context).apply {
-                        text = run { "${time.time.hour.atLeastTwoDigits()} : ${time.time.minute.atLeastTwoDigits()}" }
-                        setOnClickListener {
-                            onRemoveTime(item.dayOfWeek, time)
-                        }
-                    })
-                }
+            setupButtonFlow()
+        }
+        if (payloads.contains(NeedToChangeChecked)) {
+            setChecked()
+        }
+    }
+
+    private fun setupButtonFlow() {
+        with (binding) {
+            if (item.times.isEmpty()) {
+                buttons.isGone = true
+            } else {
+                buttons.isVisible = true
+            }
+            for (viewId in buttons.referencedIds) {
+                buttons.removeChildView(root.findViewById(viewId))
+            }
+            for (time in item.times.sortedBy { it.time }) {
+                buttons.addChildView(createButton(binding.root.context).apply {
+                    text = run { "${time.time.hour.atLeastTwoDigits()} : ${time.time.minute.atLeastTwoDigits()}" }
+                    setOnClickListener {
+                        onRemoveTime(item.dayOfWeek, time)
+                    }
+                })
             }
         }
+    }
+
+    private fun setChecked() {
+        binding.check.isChecked = item.isChecked
     }
 
     private fun createButton(context: Context): MaterialButton {

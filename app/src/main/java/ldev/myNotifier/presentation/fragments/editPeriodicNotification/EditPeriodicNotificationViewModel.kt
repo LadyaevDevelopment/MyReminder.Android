@@ -18,8 +18,8 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     @Assisted private val notification: PeriodicNotification?
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(UiState.initial())
-    val state: LiveData<UiState> = _state
+    private val _state: MutableLiveData<UiState>
+    val state: LiveData<UiState> get() = _state
 
     fun setTitle(title: String) {
         _state.postValue(_state.value!!.copy(
@@ -132,8 +132,9 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     }
 
     init {
+        val initialState = UiState.initial()
         if (notification != null) {
-            val daysOfWeek = _state.value!!.daysOfWeek.toMutableMap()
+            val daysOfWeek = initialState.daysOfWeek.toMutableMap()
             for (dayOfWeek in DayOfWeek.values()) {
                 daysOfWeek[dayOfWeek] = DayOfWeekState(
                     checked = false,
@@ -142,11 +143,15 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
                         .map { NotificationTimeModel(id = it.id, time = it.time) }
                 )
             }
-            _state.postValue(_state.value!!.copy(
-                title = notification.title,
-                text = notification.text,
-                daysOfWeek = daysOfWeek
-            ))
+            _state = MutableLiveData(
+                initialState.copy(
+                    title = notification.title,
+                    text = notification.text,
+                    daysOfWeek = daysOfWeek
+                )
+            )
+        } else {
+            _state = MutableLiveData(initialState)
         }
     }
 
