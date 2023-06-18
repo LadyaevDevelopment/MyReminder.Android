@@ -15,12 +15,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ldev.myNotifier.databinding.FragmentEditPeriodicNotificationBinding
+import ldev.myNotifier.domain.entities.NotificationRule
+import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.Time
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.VerticalItemDecorator
 import ldev.myNotifier.utils.dpToPixels
 import ldev.myNotifier.utils.recyclerView.FingerprintAdapter
+import java.time.DayOfWeek
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -31,7 +34,21 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
     private val viewModel: EditPeriodicNotificationViewModel by viewModels {
         EditPeriodicNotificationViewModel.providesFactory(
             assistedFactory = viewModelFactory,
-            notification = null
+            notification = PeriodicNotification(
+                id = 1,
+                title = "My first notification",
+                text = "Stuff...",
+                rules = listOf(
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.MONDAY, time = Time(hour = 12, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.MONDAY, time = Time(hour = 21, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.WEDNESDAY, time = Time(hour = 20, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.WEDNESDAY, time = Time(hour = 18, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.WEDNESDAY, time = Time(hour = 12, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.FRIDAY, time = Time(hour = 12, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.SUNDAY, time = Time(hour = 4, minute = 56)),
+                    NotificationRule(id = 0, dayOfWeek = DayOfWeek.SUNDAY, time = Time(hour = 12, minute = 56)),
+                )
+            )
         )
     }
 

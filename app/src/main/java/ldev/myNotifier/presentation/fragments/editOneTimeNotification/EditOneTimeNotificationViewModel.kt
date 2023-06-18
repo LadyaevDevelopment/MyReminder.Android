@@ -41,9 +41,11 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
 
     init {
         if (notification != null) {
-            setTitle(notification.title)
-            setText(notification.text)
-            setNotificationTime(NotificationTime.DateTime(notification.time))
+            _state.postValue(_state.value!!.copy(
+                title = notification.title,
+                text = notification.text,
+                notificationTime = NotificationTime.DateTime(notification.time)
+            ))
         }
     }
 

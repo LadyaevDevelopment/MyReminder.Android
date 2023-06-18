@@ -133,9 +133,6 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
 
     init {
         if (notification != null) {
-            setTitle(notification.title)
-            setText(notification.text)
-
             val daysOfWeek = _state.value!!.daysOfWeek.toMutableMap()
             for (dayOfWeek in DayOfWeek.values()) {
                 daysOfWeek[dayOfWeek] = DayOfWeekState(
@@ -145,6 +142,11 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
                         .map { NotificationTimeModel(id = it.id, time = it.time) }
                 )
             }
+            _state.postValue(_state.value!!.copy(
+                title = notification.title,
+                text = notification.text,
+                daysOfWeek = daysOfWeek
+            ))
         }
     }
 

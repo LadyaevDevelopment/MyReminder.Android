@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
+import ldev.myNotifier.R
 import ldev.myNotifier.databinding.FragmentEditOneTimeNotificationBinding
 import ldev.myNotifier.databinding.LayoutIntervalPickerBinding
 import ldev.myNotifier.presentation.appComponent
@@ -91,9 +92,9 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
                         }
                         is EditOneTimeNotificationViewModel.NotificationTime.Interval -> {
                             val interval = state.notificationTime
-                            "Через ${interval.hours.atLeastTwoDigits()} : ${interval.minutes.atLeastTwoDigits()}"
+                            "${getString(R.string.afterInterval)} ${interval.hours.atLeastTwoDigits()} : ${interval.minutes.atLeastTwoDigits()}"
                         }
-                        null -> "Время не выбрано"
+                        null -> getString(R.string.timeNotChosen)
                     }
                 }
             }
@@ -107,9 +108,9 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
         configureNumberPicker(intervalPickerBinding.minutePicker, 1, 59)
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Выберите интервал")
+        builder.setTitle(getString(R.string.chooseInterval))
         builder.setView(intervalPickerBinding.root)
-        builder.setPositiveButton("OK") { dialog, which ->
+        builder.setPositiveButton(getString(R.string.ok)) { _, _ ->
             viewModel.setNotificationTime(
                 EditOneTimeNotificationViewModel.NotificationTime.Interval(
                     hours = intervalPickerBinding.hourPicker.value,
@@ -117,7 +118,7 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
                 )
             )
         }
-        builder.setNegativeButton("Отмена") { dialog, which ->
+        builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
             dialog.dismiss()
         }
         val dialog = builder.create()

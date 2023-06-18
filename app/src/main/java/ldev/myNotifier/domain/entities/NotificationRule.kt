@@ -4,6 +4,6 @@ import java.time.DayOfWeek
 
 data class NotificationRule(
     val id: Long,
-    val time: Time,
-    val dayOfWeek: DayOfWeek
+    val dayOfWeek: DayOfWeek,
+    val time: Time
 )

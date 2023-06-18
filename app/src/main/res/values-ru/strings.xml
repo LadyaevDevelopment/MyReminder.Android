@@ -12,4 +12,24 @@
     <string name="short_friday">ПТ</string>
     <string name="short_saturday">СБ</string>
     <string name="short_sunday">ВС</string>
+
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="afterInterval">Через</string>
+    <string name="interval">Интервал</string>
+    <string name="text">Текст</string>
+    <string name="title">Заголовок</string>
+    <string name="oneTimeNotification">Одноразовое уведомление</string>
+    <string name="periodicNotification">Периодическое уведомление</string>
+    <string name="rules">Правила</string>
+    <string name="settings">Настройки</string>
+    <string name="appTheme">Тема приложения</string>
+    <string name="appLanguage">Язык приложения</string>
+    <string name="downloadConfig">Сохранить конфиг</string>
+    <string name="uploadConfig">Загрузить конфиг</string>
+    <string name="today">Сегодня</string>
+    <string name="timeNotChosen">Время не выбрано</string>
+    <string name="chooseInterval">Выберите интервал</string>
+    <string name="exactTime">Точное время</string>
 </resources>

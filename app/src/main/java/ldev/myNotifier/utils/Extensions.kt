@@ -6,7 +6,6 @@ import android.content.Context
 import android.view.View
 import android.view.ViewParent
 import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -68,8 +67,8 @@ fun Date.formatAsHoursMinutes(): String {
     return format.format(this)
 }
 
-fun Date.formatAsFullDayFullMonthFullYear(locale: Locale = Locale("ru")): String {
-    val format = SimpleDateFormat("dd MMMM yyyy", locale)
+fun Date.formatAsFullDayFullMonthFullYear(): String {
+    val format = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
     return format.format(this)
 }
 

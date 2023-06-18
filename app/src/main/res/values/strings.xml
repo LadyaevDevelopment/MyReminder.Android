@@ -12,4 +12,24 @@
     <string name="short_friday">FRI</string>
     <string name="short_saturday">SAT</string>
     <string name="short_sunday">SUN</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="afterInterval">In</string>
+    <string name="interval">Interval</string>
+    <string name="text">Text</string>
+    <string name="title">Title</string>
+    <string name="oneTimeNotification">Onetime notification</string>
+    <string name="periodicNotification">Periodic notification</string>
+    <string name="rules">Rules</string>
+    <string name="settings">Settings</string>
+    <string name="appTheme">App theme</string>
+    <string name="appLanguage">App language</string>
+    <string name="downloadConfig">Download config</string>
+    <string name="uploadConfig">Upload config</string>
+    <string name="today">Today</string>
+    <string name="timeNotChosen">Time is not chosen</string>
+    <string name="chooseInterval">Choose an interval</string>
+    <string name="exactTime">Exact time</string>
 </resources>
