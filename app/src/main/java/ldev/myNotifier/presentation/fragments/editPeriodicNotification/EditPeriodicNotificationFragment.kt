@@ -93,7 +93,7 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         }
         binding.addBtn.setOnClickListener {
             showTimePicker { hour, minute ->
-                viewModel.addTimeToAll(
+                viewModel.addTimeToAllSelected(
                     EditPeriodicNotificationViewModel.Time(
                         hour = hour,
                         minute = minute

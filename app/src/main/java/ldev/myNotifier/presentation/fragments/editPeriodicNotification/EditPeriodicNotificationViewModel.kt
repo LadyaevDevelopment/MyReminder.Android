@@ -75,15 +75,17 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         ))
     }
 
-    fun addTimeToAll(time: Time) {
+    fun addTimeToAllSelected(time: Time) {
         _rulesState.postValue(_rulesState.value!!.copy(
             daysOfWeek = _rulesState.value!!.daysOfWeek.toMutableMap().apply {
                 for ((dayOfWeek, dayOfWeekState) in this) {
-                    this[dayOfWeek] = dayOfWeekState.copy(
-                        times = dayOfWeekState.times.toMutableList().apply {
-                            add(Time(hour = time.hour, minute = time.minute))
-                        }
-                    )
+                    if (dayOfWeekState.checked) {
+                        this[dayOfWeek] = dayOfWeekState.copy(
+                            times = dayOfWeekState.times.toMutableList().apply {
+                                add(Time(hour = time.hour, minute = time.minute))
+                            }
+                        )
+                    }
                 }
             }
         ))
