@@ -1,9 +1,5 @@
 package ldev.myNotifier.data.mock
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import ldev.myNotifier.domain.util.DataResult
 import ldev.myNotifier.domain.entities.Notification
 import ldev.myNotifier.domain.entities.OneTimeNotification
@@ -56,40 +52,24 @@ class NotificationMockRepository : NotificationRepository {
         TodayNotification(id = 17, title = "Notification 17", time = Date(), initialTime = Date(), status = TodayNotificationStatus.Completed),
     )
 
-    override fun getNotificationsForToday(): Flow<DataResult<List<TodayNotification>>> {
-        return flow {
-            emit(
-                DataResult(success = true, data = notificationsForToday)
-            )
-        }.flowOn(Dispatchers.IO)
+    override suspend fun getNotificationsForToday(): DataResult<List<TodayNotification>> {
+        return DataResult(success = true, data = notificationsForToday)
     }
 
-    override fun getAllNotifications(): Flow<DataResult<List<Notification>>> {
-        return flow {
-            emit(
-                DataResult(success = true, data = notifications)
-            )
-        }.flowOn(Dispatchers.IO)
+    override suspend fun getAllNotifications(): DataResult<List<Notification>> {
+        return DataResult(success = true, data = notifications)
     }
 
-    override fun getNotificationInfo(): Flow<DataResult<Notification>> {
-        return flow {
-            emit(
-                DataResult(success = true, data = notifications[3])
-            )
-        }.flowOn(Dispatchers.IO)
+    override suspend fun getNotificationInfo(): DataResult<Notification> {
+        return DataResult(success = true, data = notifications[3])
     }
 
-    override fun saveOneTimeNotification(notification: OneTimeNotification): Flow<OperationResult> {
-        return flow {
-            emit(OperationResult(success = true))
-        }.flowOn(Dispatchers.IO)
+    override suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult {
+        return OperationResult(success = true)
     }
 
-    override fun savePeriodicNotification(notification: PeriodicNotification): Flow<OperationResult> {
-        return flow {
-            emit(OperationResult(success = true))
-        }.flowOn(Dispatchers.IO)
+    override suspend fun savePeriodicNotification(notification: PeriodicNotification): OperationResult {
+        return OperationResult(success = true)
     }
 
 }

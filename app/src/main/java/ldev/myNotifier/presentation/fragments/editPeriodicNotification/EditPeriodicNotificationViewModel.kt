@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ldev.myNotifier.domain.entities.NotificationRule
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.Time
@@ -173,14 +176,16 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
             ))
             return
         }
-        notificationRepository.savePeriodicNotification(
-            notification = PeriodicNotification(
-                id = notification?.id ?: 0,
-                title = state.title,
-                text = state.text,
-                rules = rules
+        viewModelScope.launch(Dispatchers.IO) {
+            notificationRepository.savePeriodicNotification(
+                notification = PeriodicNotification(
+                    id = notification?.id ?: 0,
+                    title = state.title,
+                    text = state.text,
+                    rules = rules
+                )
             )
-        )
+        }
     }
 
     data class UiState(

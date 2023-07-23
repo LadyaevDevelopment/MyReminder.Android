@@ -10,14 +10,14 @@ import ldev.myNotifier.domain.util.OperationResult
 
 interface NotificationRepository {
 
-    fun getNotificationsForToday(): Flow<DataResult<List<TodayNotification>>>
+    suspend fun getNotificationsForToday(): DataResult<List<TodayNotification>>
 
-    fun getAllNotifications(): Flow<DataResult<List<Notification>>>
+    suspend fun getAllNotifications(): DataResult<List<Notification>>
 
-    fun getNotificationInfo(): Flow<DataResult<Notification>>
+    suspend fun getNotificationInfo(): DataResult<Notification>
 
-    fun saveOneTimeNotification(notification: OneTimeNotification): Flow<OperationResult>
+    suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult
 
-    fun savePeriodicNotification(notification: PeriodicNotification): Flow<OperationResult>
+    suspend fun savePeriodicNotification(notification: PeriodicNotification): OperationResult
 
 }

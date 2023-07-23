@@ -1,18 +1,18 @@
 package ldev.myNotifier.di
 
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import ldev.myNotifier.data.mock.NotificationMockRepository
+import ldev.myNotifier.data.room.NotificationLocalRepository
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import javax.inject.Singleton
 
 @Module
-class RepositoryModule {
+interface RepositoryModule {
 
     @Singleton
-    @Provides
-    fun provideNotificationRepository(): NotificationRepository {
-        return NotificationMockRepository()
-    }
+    @Binds
+    fun bindNotificationRepository(repository: NotificationLocalRepository): NotificationRepository
 
 }

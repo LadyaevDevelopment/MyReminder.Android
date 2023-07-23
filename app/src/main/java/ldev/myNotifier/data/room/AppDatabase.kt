@@ -12,7 +12,7 @@ import androidx.room.TypeConverters
         PeriodicNotificationRule::class
     ],
 )
-@TypeConverters(DateConverter::class, DayOfWeekConverter::class)
+@TypeConverters(DateConverter::class, DayOfWeekConverter::class, TimeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getNotificationDao(): NotificationDao

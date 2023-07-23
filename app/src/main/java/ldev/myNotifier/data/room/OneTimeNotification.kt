@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import ldev.myNotifier.data.room.OneTimeNotification.Companion.ID
 import ldev.myNotifier.data.room.OneTimeNotification.Companion.TABLE_NAME
 import java.util.Date
@@ -23,10 +22,8 @@ data class OneTimeNotification(
     @ColumnInfo(name = TEXT)
     val text: String,
     @ColumnInfo(name = OLD_DATE)
-    @TypeConverters(DateConverter::class)
     val oldDate: Date,
     @ColumnInfo(name = DATE)
-    @TypeConverters(DateConverter::class)
     val date: Date,
     @ColumnInfo(name = IS_POSTPONED)
     val isPostponed: Boolean,

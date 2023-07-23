@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import java.time.Instant
@@ -57,14 +60,16 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
             ))
             return
         }
-        notificationRepository.saveOneTimeNotification(
-            notification = OneTimeNotification(
-                id = notification?.id ?: 0,
-                title = state.title,
-                text = state.text,
-                time = resolveNotificationTime(state.notificationTime)
+        viewModelScope.launch(Dispatchers.IO) {
+            notificationRepository.saveOneTimeNotification(
+                notification = OneTimeNotification(
+                    id = notification?.id ?: 0,
+                    title = state.title,
+                    text = state.text,
+                    time = resolveNotificationTime(state.notificationTime)
+                )
             )
-        )
+        }
     }
 
     private fun resolveNotificationTime(notificationTime: NotificationTime): Date {

@@ -19,14 +19,13 @@ class TodayViewModel @Inject constructor(
     val state: LiveData<TodayUiState> = _state
 
     fun getNotifications() {
-        viewModelScope.launch {
-            notificationRepository.getNotificationsForToday().collect { result ->
-                withContext(Dispatchers.Main) {
-                    _state.postValue(_state.value!!.copy(
-                        notifications = result.data.orEmpty(),
-                        errorMessage = result.errorMessage
-                    ))
-                }
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = notificationRepository.getNotificationsForToday()
+            withContext(Dispatchers.Main) {
+                _state.postValue(_state.value!!.copy(
+                    notifications = result.data.orEmpty(),
+                    errorMessage = result.errorMessage
+                ))
             }
         }
     }

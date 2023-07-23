@@ -5,10 +5,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import ldev.myNotifier.data.room.PeriodicNotificationRule.Companion.ID
 import ldev.myNotifier.data.room.PeriodicNotificationRule.Companion.NOTIFICATION_ID
 import ldev.myNotifier.data.room.PeriodicNotificationRule.Companion.TABLE_NAME
+import ldev.myNotifier.domain.entities.Time
 import java.time.DayOfWeek
 import java.util.Date
 
@@ -32,18 +32,15 @@ data class PeriodicNotificationRule(
     @ColumnInfo(name = NOTIFICATION_ID)
     val notificationId: Long,
     @ColumnInfo(name = DAY_OF_WEEK)
-    @TypeConverters(DayOfWeekConverter::class)
     val dayOfWeek: DayOfWeek,
     @ColumnInfo(name = TIME)
-    @TypeConverters(DateConverter::class)
-    val time: Date,
+    val time: Time,
     @ColumnInfo(name = POSTPONED_TIME)
-    @TypeConverters(DateConverter::class)
     val postponedTime: Date?
 ) {
     companion object {
         const val TABLE_NAME = "periodic_notification_rules"
-        const val ID = "id"
+        const val ID = "periodic_notification_rule_id"
         const val NOTIFICATION_ID = "notification_id"
         const val DAY_OF_WEEK = "day_of_week"
         const val TIME = "time"

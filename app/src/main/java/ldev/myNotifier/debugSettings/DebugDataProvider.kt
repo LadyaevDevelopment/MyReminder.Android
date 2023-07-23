@@ -11,7 +11,7 @@ class DebugDataProvider : DataProvider {
     override fun <T> provide(clazz: Class<T>): T? {
         if (clazz == PeriodicNotification::class.java) {
             return PeriodicNotification(
-                id = 1,
+                id = 0,
                 title = "My first notification",
                 text = "Stuff...",
                 rules = listOf(
