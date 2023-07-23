@@ -1,6 +1,7 @@
 package ldev.myNotifier.data.room
 
 import ldev.myNotifier.domain.entities.Notification
+import ldev.myNotifier.domain.entities.NotificationType
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.TodayNotification
@@ -23,6 +24,7 @@ class NotificationLocalRepository @Inject constructor(
                 title = it.notification.title,
                 time = Date(),
                 initialTime = Date(),
+                type = NotificationType.OneTime,
                 status = TodayNotificationStatus.Pending
             )
         })
@@ -31,17 +33,24 @@ class NotificationLocalRepository @Inject constructor(
     override suspend fun getAllNotifications(): DataResult<List<Notification>> {
         val notifications = notificationDao.getPeriodicNotifications()
         return DataResult(success = true, data = notifications.map {
-            PeriodicNotification(
-                id = it.notification.id,
-                title = it.notification.title,
-                text = it.notification.text,
-                rules = listOf()
-            )
+            it.notification.toDomainEntity(it.rules.map { it.toDomainEntity() })
         })
     }
 
-    override suspend fun getNotificationInfo(): DataResult<Notification> {
-        TODO("Not yet implemented")
+    override suspend fun getOneTimeNotification(id: Long): DataResult<OneTimeNotification?> {
+        return DataResult(
+            success = true,
+            data = notificationDao.getOneTimeNotification(id)?.toDomainEntity()
+        )
+    }
+
+    override suspend fun getPeriodicNotification(id: Long): DataResult<PeriodicNotification?> {
+        return DataResult(
+            success = true,
+            data = notificationDao.getPeriodicNotification(id)?.let {
+                it.notification.toDomainEntity(it.rules.map { it.toDomainEntity() })
+            }
+        )
     }
 
     override suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult {
@@ -55,21 +64,9 @@ class NotificationLocalRepository @Inject constructor(
                 ruleIdsToKeep = notification.rules.map { it.id }.distinct().toList()
             )
         }
-        val notificationId = notificationDao.addOrUpdatePeriodicNotification(PeriodicNotification(
-            id = notification.id,
-            title = notification.title,
-            text = notification.text
-        ))
+        val notificationId = notificationDao.addOrUpdatePeriodicNotification(notification.toRoomEntity())
         notificationDao.addOrUpdatePeriodicNotificationRules(
-            notification.rules.map {
-                PeriodicNotificationRule(
-                    id = it.id,
-                    notificationId = notificationId,
-                    dayOfWeek = it.dayOfWeek,
-                    time = it.time,
-                    postponedTime = null
-                )
-            }
+            notification.rules.map { it.toRoomEntity(notificationId) }
         )
         return OperationResult(success = true)
     }

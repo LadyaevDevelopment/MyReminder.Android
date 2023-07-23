@@ -11,7 +11,9 @@ import ldev.myNotifier.utils.formatAsHoursMinutes
 import ldev.myNotifier.utils.recyclerView.BaseViewHolder
 import ldev.myNotifier.utils.recyclerView.ItemFingerprint
 
-class NotificationFingerprint : ItemFingerprint<TimeLineNotificationBinding, TodayNotification> {
+class NotificationFingerprint(
+    private val onTap: (notification: TodayNotification) -> Unit
+) : ItemFingerprint<TimeLineNotificationBinding, TodayNotification> {
 
     override fun isRelativeItem(item: Any) = item is TodayNotification
 
@@ -22,7 +24,7 @@ class NotificationFingerprint : ItemFingerprint<TimeLineNotificationBinding, Tod
         parent: ViewGroup
     ): BaseViewHolder<TimeLineNotificationBinding, TodayNotification> {
         val binding = TimeLineNotificationBinding.inflate(layoutInflater, parent, false)
-        return NotificationViewHolder(binding)
+        return NotificationViewHolder(binding, onTap)
     }
 
     override fun getDiffUtil(): DiffUtil.ItemCallback<TodayNotification> = diffUtil
@@ -35,8 +37,15 @@ class NotificationFingerprint : ItemFingerprint<TimeLineNotificationBinding, Tod
 }
 
 class NotificationViewHolder(
-    binding: TimeLineNotificationBinding
+    binding: TimeLineNotificationBinding,
+    onTap: (notification: TodayNotification) -> Unit
 ) : BaseViewHolder<TimeLineNotificationBinding, TodayNotification>(binding) {
+
+    init {
+        binding.root.setOnClickListener {
+            onTap(item)
+        }
+    }
 
     override fun onBind(item: TodayNotification) {
         super.onBind(item)

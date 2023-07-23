@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ldev.myNotifier.databinding.FragmentEditPeriodicNotificationBinding
@@ -26,6 +27,8 @@ import java.util.Calendar
 import javax.inject.Inject
 
 class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotificationBinding>() {
+
+    private val args: EditPeriodicNotificationFragmentArgs by navArgs()
 
     @Inject
     lateinit var debugSettings: DebugSettings

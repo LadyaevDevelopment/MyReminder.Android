@@ -47,7 +47,7 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
             _state.postValue(_state.value!!.copy(
                 title = notification.title,
                 text = notification.text,
-                notificationTime = NotificationTime.DateTime(notification.time)
+                notificationTime = NotificationTime.DateTime(notification.date)
             ))
         }
     }
@@ -66,7 +66,7 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
                     id = notification?.id ?: 0,
                     title = state.title,
                     text = state.text,
-                    time = resolveNotificationTime(state.notificationTime)
+                    date = resolveNotificationTime(state.notificationTime)
                 )
             )
         }

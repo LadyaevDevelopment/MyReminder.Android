@@ -30,7 +30,7 @@ data class OneTimeNotification(
 ) {
     companion object {
         const val TABLE_NAME = "one_time_notifications"
-        const val ID = "id"
+        const val ID = "one_time_notification_id"
         const val TITLE = "title"
         const val TEXT = "text"
         const val OLD_DATE = "old_date"

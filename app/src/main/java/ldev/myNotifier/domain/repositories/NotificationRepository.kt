@@ -1,6 +1,5 @@
 package ldev.myNotifier.domain.repositories
 
-import kotlinx.coroutines.flow.Flow
 import ldev.myNotifier.domain.util.DataResult
 import ldev.myNotifier.domain.entities.Notification
 import ldev.myNotifier.domain.entities.OneTimeNotification
@@ -14,7 +13,9 @@ interface NotificationRepository {
 
     suspend fun getAllNotifications(): DataResult<List<Notification>>
 
-    suspend fun getNotificationInfo(): DataResult<Notification>
+    suspend fun getOneTimeNotification(id: Long): DataResult<OneTimeNotification?>
+
+    suspend fun getPeriodicNotification(id: Long): DataResult<PeriodicNotification?>
 
     suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult
 

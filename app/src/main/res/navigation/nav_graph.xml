@@ -28,6 +28,9 @@
     <fragment
         android:id="@+id/editOneTimeNotificationFragment"
         android:name="ldev.myNotifier.presentation.fragments.editOneTimeNotification.EditOneTimeNotificationFragment">
+        <argument
+            android:name="notification"
+            app:argType="ldev.myNotifier.presentation.fragments.editOneTimeNotification.OneTimeNotificationModel" />
     </fragment>
     <action
         android:id="@+id/actionGlobal_to_editOneTimeNotificationFragment"
@@ -36,6 +39,9 @@
     <fragment
         android:id="@+id/editPeriodicNotificationFragment"
         android:name="ldev.myNotifier.presentation.fragments.editPeriodicNotification.EditPeriodicNotificationFragment">
+        <argument
+            android:name="notification"
+            app:argType="ldev.myNotifier.presentation.fragments.editPeriodicNotification.PeriodicNotificationModel" />
     </fragment>
     <action
         android:id="@+id/actionGlobal_to_editPeriodicNotificationFragment"

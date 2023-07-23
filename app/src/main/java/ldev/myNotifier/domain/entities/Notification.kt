@@ -13,7 +13,7 @@ data class OneTimeNotification(
     override val id: Long,
     override val title: String,
     override val text: String,
-    val time: Date
+    val date: Date
 ): Notification(id, title, text, NotificationType.OneTime)
 
 data class PeriodicNotification(

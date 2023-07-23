@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 import ldev.myNotifier.R
 import ldev.myNotifier.databinding.FragmentEditOneTimeNotificationBinding
@@ -35,6 +36,8 @@ import java.util.Calendar
 import javax.inject.Inject
 
 class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotificationBinding>() {
+
+    private val args: EditOneTimeNotificationFragmentArgs by navArgs()
 
     @Inject
     lateinit var viewModelFactory: EditOneTimeNotificationViewModel.EditOneTimeNotificationViewModelFactory

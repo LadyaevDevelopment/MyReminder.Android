@@ -7,6 +7,7 @@ data class TodayNotification(
     val title: String,
     val time: Date,
     val initialTime: Date,
+    val type: NotificationType,
     val status: TodayNotificationStatus
 )
 

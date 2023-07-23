@@ -28,7 +28,12 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var _notificationAdapter: FingerprintAdapter? = FingerprintAdapter(listOf(NotificationFingerprint()))
+    private val notificationFingerPrint = NotificationFingerprint { notification ->
+        viewModel.tapNotification(notification)
+    }
+    private var _notificationAdapter: FingerprintAdapter? = FingerprintAdapter(
+        listOf(notificationFingerPrint)
+    )
     private val notificationAdapter = _notificationAdapter!!
 
     override fun getContentInflater(): (LayoutInflater, ViewGroup?, Boolean) -> FragmentTodayBinding {
@@ -39,15 +44,37 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
-        viewModel = ViewModelProvider(this, viewModelFactory)[TodayViewModel::class.java].apply {
-            getNotifications()
-        }
+        viewModel = ViewModelProvider(this, viewModelFactory)[TodayViewModel::class.java]
+
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.state.observe(viewLifecycleOwner) { state ->
                     lifecycleScope.launch {
                         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                             notificationAdapter.submitList(state.notifications)
+                        }
+                    }
+                }
+                viewModel.command.observe(viewLifecycleOwner) { command ->
+                    lifecycleScope.launch {
+                        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            when (command) {
+                                TodayUiCommand.GetNotifications -> {
+                                    viewModel.getNotifications()
+                                }
+                                is TodayUiCommand.GoToEditOneTimeNotification -> {
+//                                    findNavController().navigate(
+//                                        NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment(
+//
+//                                        )
+//                                    )
+                                }
+                                is TodayUiCommand.GoToEditPeriodicNotification -> {
+//                                    findNavController().navigate(
+//                                        NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment()
+//                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -59,8 +86,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.today.text = Date().formatAsFullDayFullMonthFullYear()
         binding.addNotificationBtn.setOnClickListener {
-            //findNavController().navigate(NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment())
-            findNavController().navigate(NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment())
+
         }
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {

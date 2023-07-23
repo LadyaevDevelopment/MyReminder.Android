@@ -30,9 +30,8 @@ class DayOfWeekConverter {
 }
 
 class TimeConverter {
-
     @TypeConverter
-    fun fromTime(time: Time): String {
+    fun toPrimitiveValue(time: Time): String {
         return "${time.hour}:${time.minute}"
     }
 
@@ -43,5 +42,4 @@ class TimeConverter {
         val minute = parts[1].toInt()
         return Time(hour, minute)
     }
-
 }
