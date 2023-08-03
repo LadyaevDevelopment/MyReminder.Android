@@ -38,7 +38,7 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
     private val viewModel: EditPeriodicNotificationViewModel by viewModels {
         EditPeriodicNotificationViewModel.providesFactory(
             assistedFactory = viewModelFactory,
-            notification = debugSettings.editPeriodicNotificationSettings.notification
+            notificationWithRules = args.notification?.toDomainEntity() ?: debugSettings.editPeriodicNotificationSettings.notificationWithRules
         )
     }
 

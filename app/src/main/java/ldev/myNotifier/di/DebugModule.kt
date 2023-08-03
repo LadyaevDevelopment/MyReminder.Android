@@ -6,10 +6,12 @@ import ldev.myNotifier.debugSettings.DataProvider
 import ldev.myNotifier.debugSettings.DebugDataProvider
 import ldev.myNotifier.debugSettings.DebugSettings
 import ldev.myNotifier.debugSettings.EditPeriodicNotificationSettings
-import ldev.myNotifier.domain.entities.PeriodicNotification
 import javax.inject.Singleton
 import ldev.myNotifier.BuildConfig
+import ldev.myNotifier.debugSettings.EditOneTimeNotificationSettings
 import ldev.myNotifier.debugSettings.ReleaseDataProvider
+import ldev.myNotifier.domain.entities.OneTimeNotification
+import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 
 @Module
 class DebugModule {
@@ -24,7 +26,10 @@ class DebugModule {
     fun provideDebugSettings(dataProvider: DataProvider) : DebugSettings {
         return DebugSettings(
             editPeriodicNotificationSettings = EditPeriodicNotificationSettings(
-                notification = dataProvider.provide(PeriodicNotification::class.java)
+                notificationWithRules = dataProvider.provide(PeriodicNotificationWithRules::class.java)
+            ),
+            editOneTimeNotificationSettings = EditOneTimeNotificationSettings(
+                notification = dataProvider.provide(OneTimeNotification::class.java)
             )
         )
     }

@@ -10,15 +10,16 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ldev.myNotifier.domain.entities.NotificationRule
+import ldev.myNotifier.domain.entities.PeriodicNotificationRule
 import ldev.myNotifier.domain.entities.PeriodicNotification
+import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.entities.Time
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import java.time.DayOfWeek
 
 class EditPeriodicNotificationViewModel @AssistedInject constructor(
     private val notificationRepository: NotificationRepository,
-    @Assisted private val notification: PeriodicNotification?
+    @Assisted private val notificationWithRules: PeriodicNotificationWithRules?
 ) : ViewModel() {
 
     private val _state: MutableLiveData<UiState>
@@ -136,20 +137,20 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
 
     init {
         val initialState = UiState.initial()
-        if (notification != null) {
+        if (notificationWithRules != null) {
             val daysOfWeek = initialState.daysOfWeek.toMutableMap()
             for (dayOfWeek in DayOfWeek.values()) {
                 daysOfWeek[dayOfWeek] = DayOfWeekState(
                     checked = false,
-                    times = notification.rules
+                    times = notificationWithRules.rules
                         .filter { it.dayOfWeek == dayOfWeek }
                         .map { NotificationTimeModel(id = it.id, time = it.time) }
                 )
             }
             _state = MutableLiveData(
                 initialState.copy(
-                    title = notification.title,
-                    text = notification.text,
+                    title = notificationWithRules.notification.title,
+                    text = notificationWithRules.notification.text,
                     daysOfWeek = daysOfWeek
                 )
             )
@@ -162,7 +163,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         val state = _state.value!!
         val rules = state.daysOfWeek.entries.map { (dayOfWeek, dayOfWeekData) ->
             dayOfWeekData.times.map { time ->
-                NotificationRule(
+                PeriodicNotificationRule(
                     id = time.id,
                     time = time.time,
                     dayOfWeek = dayOfWeek
@@ -178,10 +179,12 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         }
         viewModelScope.launch(Dispatchers.IO) {
             notificationRepository.savePeriodicNotification(
-                notification = PeriodicNotification(
-                    id = notification?.id ?: 0,
-                    title = state.title,
-                    text = state.text,
+                PeriodicNotificationWithRules(
+                    notification = PeriodicNotification(
+                        id = notificationWithRules?.notification?.id ?: 0,
+                        title = state.title,
+                        text = state.text,
+                    ),
                     rules = rules
                 )
             )
@@ -218,7 +221,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     @AssistedFactory
     interface EditPeriodicNotificationViewModelFactory {
         fun create(
-            @Assisted notification: PeriodicNotification?,
+            @Assisted notificationWithRules: PeriodicNotificationWithRules?,
         ): EditPeriodicNotificationViewModel
     }
 
@@ -226,10 +229,10 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     companion object {
         fun providesFactory(
             assistedFactory: EditPeriodicNotificationViewModelFactory,
-            notification: PeriodicNotification?,
+            notificationWithRules: PeriodicNotificationWithRules?,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(notification) as T
+                return assistedFactory.create(notificationWithRules) as T
             }
         }
     }

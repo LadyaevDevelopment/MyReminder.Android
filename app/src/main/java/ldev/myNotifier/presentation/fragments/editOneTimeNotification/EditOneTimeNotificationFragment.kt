@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import ldev.myNotifier.R
 import ldev.myNotifier.databinding.FragmentEditOneTimeNotificationBinding
 import ldev.myNotifier.databinding.LayoutIntervalPickerBinding
+import ldev.myNotifier.debugSettings.DebugSettings
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.atLeastTwoDigits
@@ -40,11 +41,14 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
     private val args: EditOneTimeNotificationFragmentArgs by navArgs()
 
     @Inject
+    lateinit var debugSettings: DebugSettings
+
+    @Inject
     lateinit var viewModelFactory: EditOneTimeNotificationViewModel.EditOneTimeNotificationViewModelFactory
     private val viewModel: EditOneTimeNotificationViewModel by viewModels {
         EditOneTimeNotificationViewModel.providesFactory(
             assistedFactory = viewModelFactory,
-            notification = null
+            notification = args.notification?.toDomainEntity() ?: debugSettings.editOneTimeNotificationSettings.notification
         )
     }
 

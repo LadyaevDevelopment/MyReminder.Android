@@ -1,8 +1,8 @@
 package ldev.myNotifier.debugSettings
 
-import ldev.myNotifier.domain.entities.PeriodicNotification
+import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 
 data class EditPeriodicNotificationSettings(
-    val notification: PeriodicNotification?
+    val notificationWithRules: PeriodicNotificationWithRules?
 )
 

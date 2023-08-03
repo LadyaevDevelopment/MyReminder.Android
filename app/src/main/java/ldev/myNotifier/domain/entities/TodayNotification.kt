@@ -5,11 +5,12 @@ import java.util.Date
 data class TodayNotification(
     val id: Long,
     val title: String,
-    val time: Date,
-    val initialTime: Date,
+    val date: Date,
     val type: NotificationType,
     val status: TodayNotificationStatus
-)
+) {
+    companion object
+}
 
 enum class TodayNotificationStatus {
     Completed,

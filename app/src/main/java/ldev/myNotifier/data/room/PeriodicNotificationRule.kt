@@ -35,8 +35,6 @@ data class PeriodicNotificationRule(
     val dayOfWeek: DayOfWeek,
     @ColumnInfo(name = TIME)
     val time: Time,
-    @ColumnInfo(name = POSTPONED_TIME)
-    val postponedTime: Date?
 ) {
     companion object {
         const val TABLE_NAME = "periodic_notification_rules"
@@ -44,6 +42,5 @@ data class PeriodicNotificationRule(
         const val NOTIFICATION_ID = "notification_id"
         const val DAY_OF_WEEK = "day_of_week"
         const val TIME = "time"
-        const val POSTPONED_TIME = "postponed_time"
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +15,8 @@ import kotlinx.coroutines.launch
 import ldev.myNotifier.NavGraphDirections
 import ldev.myNotifier.databinding.FragmentTodayBinding
 import ldev.myNotifier.presentation.appComponent
+import ldev.myNotifier.presentation.fragments.editOneTimeNotification.toUiModel
+import ldev.myNotifier.presentation.fragments.editPeriodicNotification.toUiModel
 import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.VerticalItemDecorator
 import ldev.myNotifier.utils.dpToPixels
@@ -55,24 +58,28 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
                         }
                     }
                 }
-                viewModel.command.observe(viewLifecycleOwner) { command ->
+                viewModel.command.observe(viewLifecycleOwner) { commandEvent ->
                     lifecycleScope.launch {
                         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            when (command) {
-                                TodayUiCommand.GetNotifications -> {
-                                    viewModel.getNotifications()
-                                }
-                                is TodayUiCommand.GoToEditOneTimeNotification -> {
-//                                    findNavController().navigate(
-//                                        NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment(
-//
-//                                        )
-//                                    )
-                                }
-                                is TodayUiCommand.GoToEditPeriodicNotification -> {
-//                                    findNavController().navigate(
-//                                        NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment()
-//                                    )
+                            commandEvent.getContentIfNotHandled()?.let { command ->
+                                when (command) {
+                                    TodayUiCommand.GetNotifications -> {
+                                        viewModel.getNotifications()
+                                    }
+                                    is TodayUiCommand.GoToEditOneTimeNotification -> {
+                                        findNavController().navigate(
+                                            NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment(
+                                                command.notification?.toUiModel()
+                                            )
+                                        )
+                                    }
+                                    is TodayUiCommand.GoToEditPeriodicNotification -> {
+                                        findNavController().navigate(
+                                            NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment(
+                                                command.notification?.toUiModel()
+                                            )
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -86,7 +93,7 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.today.text = Date().formatAsFullDayFullMonthFullYear()
         binding.addNotificationBtn.setOnClickListener {
-
+            showNewNotificationDialog()
         }
         with(binding.rvNotifications) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false).apply {
@@ -101,6 +108,22 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
                 )
             )
         }
+    }
+
+    private fun showNewNotificationDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle("Создать уведомление")
+        alertDialogBuilder.setMessage("Выберите тип уведомления:")
+
+        alertDialogBuilder.setPositiveButton("Одноразовое") { _, _ ->
+            viewModel.tapCreateOneTimeNotificationBtn()
+        }
+
+        alertDialogBuilder.setNegativeButton("Периодическое") { _, _ ->
+            viewModel.tapCreatePeriodicNotificationBtn()
+        }
+
+        alertDialogBuilder.create().show()
     }
 
     override fun onDestroy() {

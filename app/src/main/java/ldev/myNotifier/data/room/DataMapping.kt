@@ -1,8 +1,5 @@
 package ldev.myNotifier.data.room
 
-import ldev.myNotifier.domain.entities.NotificationRule
-import java.util.Date
-
 fun OneTimeNotification.toDomainEntity() : ldev.myNotifier.domain.entities.OneTimeNotification {
     return ldev.myNotifier.domain.entities.OneTimeNotification(
         id = id,
@@ -18,20 +15,18 @@ fun ldev.myNotifier.domain.entities.OneTimeNotification.toRoomEntity() : OneTime
         title = title,
         text = text,
         date = date,
-        oldDate = Date(),
-        isPostponed = true
     )
 }
 
-fun PeriodicNotificationRule.toDomainEntity() : ldev.myNotifier.domain.entities.NotificationRule {
-    return ldev.myNotifier.domain.entities.NotificationRule(
+fun PeriodicNotificationRule.toDomainEntity() : ldev.myNotifier.domain.entities.PeriodicNotificationRule {
+    return ldev.myNotifier.domain.entities.PeriodicNotificationRule(
         id = id,
         dayOfWeek = dayOfWeek,
-        time = time
+        time = time,
     )
 }
 
-fun ldev.myNotifier.domain.entities.NotificationRule.toRoomEntity(
+fun ldev.myNotifier.domain.entities.PeriodicNotificationRule.toRoomEntity(
     notificationId: Long,
 ) : PeriodicNotificationRule {
     return PeriodicNotificationRule(
@@ -39,18 +34,14 @@ fun ldev.myNotifier.domain.entities.NotificationRule.toRoomEntity(
         dayOfWeek = dayOfWeek,
         time = time,
         notificationId = notificationId,
-        postponedTime = null
     )
 }
 
-fun PeriodicNotification.toDomainEntity(
-    rules: List<NotificationRule>
-) : ldev.myNotifier.domain.entities.PeriodicNotification {
+fun PeriodicNotification.toDomainEntity() : ldev.myNotifier.domain.entities.PeriodicNotification {
     return ldev.myNotifier.domain.entities.PeriodicNotification(
         id = id,
         title = title,
         text = text,
-        rules = rules
     )
 }
 

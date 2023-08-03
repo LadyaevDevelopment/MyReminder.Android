@@ -21,20 +21,14 @@ data class OneTimeNotification(
     val title: String,
     @ColumnInfo(name = TEXT)
     val text: String,
-    @ColumnInfo(name = OLD_DATE)
-    val oldDate: Date,
     @ColumnInfo(name = DATE)
     val date: Date,
-    @ColumnInfo(name = IS_POSTPONED)
-    val isPostponed: Boolean,
 ) {
     companion object {
         const val TABLE_NAME = "one_time_notifications"
         const val ID = "one_time_notification_id"
         const val TITLE = "title"
         const val TEXT = "text"
-        const val OLD_DATE = "old_date"
         const val DATE = "date"
-        const val IS_POSTPONED = "is_postponed"
     }
 }
