@@ -51,7 +51,7 @@ class AlarmManagerService @Inject constructor(
                 notificationRule
             )
             // TODO: fix request code
-            val pendingIntent = PendingIntent.getBroadcast(context, 1000 + notificationRule.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntent = PendingIntent.getBroadcast(context, -notificationRule.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
 
             val calendar = Calendar.getInstance().apply {
                 time = findNextDateByDayOfWeek(notificationRule.dayOfWeek, notificationRule.time).toDate()
