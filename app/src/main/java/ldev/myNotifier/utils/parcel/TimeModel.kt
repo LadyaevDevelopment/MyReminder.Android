@@ -1,4 +1,4 @@
-package ldev.myNotifier.presentation.fragments.editPeriodicNotification
+package ldev.myNotifier.utils.parcel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

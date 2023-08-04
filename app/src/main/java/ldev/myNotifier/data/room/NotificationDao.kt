@@ -10,7 +10,6 @@ import java.util.Date
 
 @Dao
 interface NotificationDao {
-    @Transaction
     @Query("SELECT * FROM one_time_notifications WHERE DATE(DATETIME(ROUND(date / 1000), 'unixepoch')) = DATE(DATETIME(ROUND(:date / 1000), 'unixepoch'))")
     suspend fun getOneTimeNotificationsForDate(date: Date): List<OneTimeNotification>
 
@@ -24,9 +23,11 @@ interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addOrUpdateOneTimeNotification(notification: OneTimeNotification): Long
 
+    @Transaction
     @Query("SELECT * FROM periodic_notifications")
     suspend fun getPeriodicNotifications(): List<PeriodicNotificationWithRules>
 
+    @Transaction
     @Query("SELECT * FROM periodic_notification_rules WHERE day_of_week = :dayOfWeek")
     suspend fun getPeriodicNotificationRulesForDayOfWeek(dayOfWeek: DayOfWeek): List<RuleWithPeriodicNotification>
 

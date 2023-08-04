@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name=".MainApplication"
@@ -14,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyNotifier"
         tools:targetApi="31">
+
         <activity
             android:name=".presentation.MainActivity"
             android:windowSoftInputMode="adjustResize"
@@ -23,6 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".framework.NotificationBroadcastReceiver"/>
+
     </application>
 
 </manifest>

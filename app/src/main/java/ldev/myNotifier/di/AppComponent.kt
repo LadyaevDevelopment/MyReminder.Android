@@ -12,7 +12,7 @@ import ldev.myNotifier.presentation.fragments.today.TodayFragment
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [RepositoryModule::class, ViewModelModule::class, DebugModule::class, RoomModule::class])
+@Component(modules = [RepositoryModule::class, ViewModelModule::class, DebugModule::class, RoomModule::class, FrameworkModule::class])
 interface AppComponent {
 
     fun inject(activity: MainActivity)

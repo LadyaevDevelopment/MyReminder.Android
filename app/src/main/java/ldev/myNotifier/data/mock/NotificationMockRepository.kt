@@ -3,12 +3,10 @@ package ldev.myNotifier.data.mock
 import ldev.myNotifier.domain.util.DataResult
 import ldev.myNotifier.domain.entities.NotificationType
 import ldev.myNotifier.domain.entities.OneTimeNotification
-import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.entities.TodayNotificationStatus
 import ldev.myNotifier.domain.repositories.NotificationRepository
-import ldev.myNotifier.domain.util.OperationResult
 import java.util.Date
 
 class NotificationMockRepository : NotificationRepository {
@@ -69,12 +67,12 @@ class NotificationMockRepository : NotificationRepository {
         TODO("Not yet implemented")
     }
 
-    override suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult {
-        return OperationResult(success = true)
+    override suspend fun saveOneTimeNotification(notification: OneTimeNotification): DataResult<OneTimeNotification> {
+        return DataResult(success = true)
     }
 
-    override suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): OperationResult {
-        return OperationResult(success = true)
+    override suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): DataResult<PeriodicNotificationWithRules> {
+        return DataResult(success = true)
     }
 
 }

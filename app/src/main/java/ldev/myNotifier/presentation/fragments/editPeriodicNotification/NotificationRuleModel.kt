@@ -3,6 +3,9 @@ package ldev.myNotifier.presentation.fragments.editPeriodicNotification
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
+import ldev.myNotifier.utils.parcel.TimeModel
+import ldev.myNotifier.utils.parcel.toDomainEntity
+import ldev.myNotifier.utils.parcel.toUIModel
 import java.time.DayOfWeek
 
 @Parcelize

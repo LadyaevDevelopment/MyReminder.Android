@@ -10,14 +10,12 @@ interface NotificationRepository {
 
     suspend fun getNotificationsForToday(): DataResult<List<TodayNotification>>
 
-//    suspend fun getAllNotifications(): DataResult<List<Notification>>
-
     suspend fun getOneTimeNotification(id: Long): DataResult<OneTimeNotification?>
 
     suspend fun getPeriodicNotification(id: Long): DataResult<PeriodicNotificationWithRules?>
 
-    suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult
+    suspend fun saveOneTimeNotification(notification: OneTimeNotification): DataResult<OneTimeNotification>
 
-    suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): OperationResult
+    suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): DataResult<PeriodicNotificationWithRules>
 
 }

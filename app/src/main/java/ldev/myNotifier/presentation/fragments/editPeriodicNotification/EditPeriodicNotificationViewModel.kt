@@ -10,15 +10,16 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ldev.myNotifier.core.NotificationCoordinator
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.entities.Time
-import ldev.myNotifier.domain.repositories.NotificationRepository
+
 import java.time.DayOfWeek
 
 class EditPeriodicNotificationViewModel @AssistedInject constructor(
-    private val notificationRepository: NotificationRepository,
+    private val notificationCoordinator: NotificationCoordinator,
     @Assisted private val notificationWithRules: PeriodicNotificationWithRules?
 ) : ViewModel() {
 
@@ -178,7 +179,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
-            notificationRepository.savePeriodicNotification(
+            notificationCoordinator.savePeriodicNotification(
                 PeriodicNotificationWithRules(
                     notification = PeriodicNotification(
                         id = notificationWithRules?.notification?.id ?: 0,

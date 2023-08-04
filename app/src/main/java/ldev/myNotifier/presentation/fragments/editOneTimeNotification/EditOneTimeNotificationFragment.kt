@@ -147,7 +147,7 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
                     requireContext(),
                     { _, hourOfDay, minute ->
                         val selectedDateTime = Calendar.getInstance()
-                        selectedDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute)
+                        selectedDateTime.set(year, monthOfYear, dayOfMonth, hourOfDay, minute, 0)
                         viewModel.setNotificationTime(
                             EditOneTimeNotificationViewModel.NotificationTime.DateTime(
                                 dateTime = selectedDateTime.time

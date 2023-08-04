@@ -5,9 +5,7 @@ import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import ldev.myNotifier.domain.util.DataResult
-import ldev.myNotifier.domain.util.OperationResult
 import java.time.Instant
-import java.time.LocalDate
 import javax.inject.Inject
 
 class NotificationLocalRepository @Inject constructor(
@@ -28,13 +26,6 @@ class NotificationLocalRepository @Inject constructor(
         return DataResult(success = true, data = todayNotifications)
     }
 
-//    override suspend fun getAllNotifications(): DataResult<List<Notification>> {
-//        val notifications = notificationDao.getPeriodicNotifications()
-//        return DataResult(success = true, data = notifications.map {
-//            it.notification.toDomainEntity(it.rules.map { it.toDomainEntity() })
-//        })
-//    }
-
     override suspend fun getOneTimeNotification(id: Long): DataResult<OneTimeNotification?> {
         return DataResult(
             success = true,
@@ -54,18 +45,18 @@ class NotificationLocalRepository @Inject constructor(
         )
     }
 
-    override suspend fun saveOneTimeNotification(notification: OneTimeNotification): OperationResult {
+    override suspend fun saveOneTimeNotification(notification: OneTimeNotification): DataResult<OneTimeNotification> {
         return try {
-            notificationDao.addOrUpdateOneTimeNotification(
+            val notificationId = notificationDao.addOrUpdateOneTimeNotification(
                 notification.toRoomEntity()
             )
-            OperationResult(success = true)
+            DataResult(success = true, data = notification.copy(id = notificationId))
         } catch (ex: Throwable) {
-            OperationResult(success = false, errorMessage = ex.message)
+            DataResult(success = false, errorMessage = ex.message)
         }
     }
 
-    override suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): OperationResult {
+    override suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): DataResult<PeriodicNotificationWithRules> {
         return try {
             if (notificationWithRules.notification.id != 0L) {
                 notificationDao.deleteNotificationRulesExcept(
@@ -77,9 +68,18 @@ class NotificationLocalRepository @Inject constructor(
             notificationDao.addOrUpdatePeriodicNotificationRules(
                 notificationWithRules.rules.map { it.toRoomEntity(notificationId) }
             )
-            OperationResult(success = true)
+
+            val updatedNotificationWithRules = notificationDao.getPeriodicNotification(notificationId)!!
+
+            DataResult(
+                success = true,
+                data = PeriodicNotificationWithRules(
+                    notification = updatedNotificationWithRules.notification.toDomainEntity(),
+                    rules = updatedNotificationWithRules.rules.map { it.toDomainEntity() }
+                )
+            )
         } catch (ex: Throwable) {
-            OperationResult(success = false, errorMessage = ex.message)
+            DataResult(success = false, errorMessage = ex.message)
         }
     }
 }
