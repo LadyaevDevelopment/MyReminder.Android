@@ -53,7 +53,7 @@ class AlarmManagerService @Inject constructor(
             val pendingIntent = PendingIntent.getBroadcast(context, getRequestCode(notificationRule), intent, PendingIntent.FLAG_IMMUTABLE)
 
             val calendar = Calendar.getInstance().apply {
-                time = findNextDateByDayOfWeek(notificationRule.dayOfWeek, notificationRule.time).toDate()
+                time = findNextDateByDayOfWeek(notificationRule.dayOfWeek, notificationRule.time)
             }
 
             alarmManager.setExactAndAllowWhileIdle(

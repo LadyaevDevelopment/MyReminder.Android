@@ -6,12 +6,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import java.time.DayOfWeek
-import java.util.Date
 
 @Dao
 interface NotificationDao {
-    @Query("SELECT * FROM one_time_notifications WHERE DATE(DATETIME(ROUND(date / 1000), 'unixepoch')) = DATE(DATETIME(ROUND(:date / 1000), 'unixepoch'))")
-    suspend fun getOneTimeNotificationsForDate(date: Date): List<OneTimeNotification>
+    @Query("SELECT * FROM one_time_notifications WHERE date BETWEEN :startTimeMillis AND :endTimeMillis - 1")
+    suspend fun getOneTimeNotificationsInDateRange(startTimeMillis: Long, endTimeMillis: Long): List<OneTimeNotification>
 
     @Transaction
     @Query("SELECT * FROM periodic_notifications WHERE periodic_notification_id = :id")

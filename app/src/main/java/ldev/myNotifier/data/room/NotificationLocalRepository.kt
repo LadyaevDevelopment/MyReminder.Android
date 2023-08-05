@@ -5,7 +5,7 @@ import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import ldev.myNotifier.domain.util.DataResult
-import java.time.Instant
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class NotificationLocalRepository @Inject constructor(
@@ -13,12 +13,14 @@ class NotificationLocalRepository @Inject constructor(
 ) : NotificationRepository {
 
     override suspend fun getNotificationsForToday(): DataResult<List<TodayNotification>> {
-        val instant = Instant.now()
+        val localDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
+        val startTimeMillis = localDateTime.toDate().time
+        val endTimeMillis = localDateTime.plusDays(1).toDate().time
 
-        val oneTimeNotifications = notificationDao.getOneTimeNotificationsForDate(instant.toDate())
+        val oneTimeNotifications = notificationDao.getOneTimeNotificationsInDateRange(startTimeMillis, endTimeMillis)
             .map { TodayNotification.oneTimeNotification(it.toDomainEntity()) }
 
-        val periodicNotifications = notificationDao.getPeriodicNotificationRulesForDayOfWeek(instant.toLocalDate().dayOfWeek)
+        val periodicNotifications = notificationDao.getPeriodicNotificationRulesForDayOfWeek(localDateTime.dayOfWeek)
             .map { TodayNotification.periodicNotification(it.notification.toDomainEntity(), it.rule.toDomainEntity()) }
 
         val todayNotifications = (oneTimeNotifications + periodicNotifications).sortedBy { it.date }
