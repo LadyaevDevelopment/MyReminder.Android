@@ -23,10 +23,10 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(NOTIFICATION, NotificationModel::class.java)
+            intent.getParcelableExtra(PARCELABLE_NOTIFICATION, NotificationModel::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableExtra(NOTIFICATION) as? NotificationModel
+            intent.getParcelableExtra(PARCELABLE_NOTIFICATION) as? NotificationModel
         }
 
         when (notification) {
@@ -54,7 +54,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         )
 
         with(NotificationManagerCompat.from(context)) {
-            notify(oneTimeNotification.id, notification)
+            notify(getNotificationId(oneTimeNotification), notification)
         }
     }
 
@@ -72,7 +72,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         )
 
         with(NotificationManagerCompat.from(context)) {
-            notify(-periodicNotification.ruleId, notification)
+            notify(getNotificationId(periodicNotification), notification)
         }
     }
 
@@ -103,14 +103,22 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         return true
     }
 
+    private fun getNotificationId(oneTimeNotification: NotificationModel.OneTime): Int {
+        return oneTimeNotification.id
+    }
+
+    private fun getNotificationId(periodicNotification: NotificationModel.Periodic): Int {
+        return -periodicNotification.ruleId
+    }
+
     companion object {
-        private const val NOTIFICATION = "notification"
+        private const val PARCELABLE_NOTIFICATION = "notification"
         private const val notificationChannelId = "mainChannelId"
         private const val notificationChannelName = "mainChannel"
 
         fun makeIntent(context: Context, oneTimeNotification: OneTimeNotification): Intent {
             return Intent(context, NotificationBroadcastReceiver::class.java).apply {
-                putExtra(NOTIFICATION, NotificationModel.fromDomainEntity(oneTimeNotification))
+                putExtra(PARCELABLE_NOTIFICATION, NotificationModel.fromDomainEntity(oneTimeNotification))
             }
         }
         fun makeIntent(
@@ -119,7 +127,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             notificationRule: PeriodicNotificationRule
         ): Intent {
             return Intent(context, NotificationBroadcastReceiver::class.java).apply {
-                putExtra(NOTIFICATION, NotificationModel.fromDomainEntity(periodicNotification, notificationRule))
+                putExtra(PARCELABLE_NOTIFICATION, NotificationModel.fromDomainEntity(periodicNotification, notificationRule))
             }
         }
     }
