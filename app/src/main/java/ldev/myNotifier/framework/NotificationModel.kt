@@ -12,21 +12,22 @@ import java.util.Date
 
 @Parcelize
 sealed class NotificationModel(
-    open val id: Long,
+    open val id: Int,
     open val title: String,
     open val text: String
 ) : Parcelable {
     class OneTime(
-        override val id: Long,
+        override val id: Int,
         override val title: String,
         override val text: String,
         val date: Date
     ) : NotificationModel(id, title, text)
 
     class Periodic(
-        override val id: Long,
+        override val id: Int,
         override val title: String,
         override val text: String,
+        val ruleId: Int,
         val time: TimeModel,
         val dayOfWeek: DayOfWeek
     ) : NotificationModel(id, title, text)
@@ -53,6 +54,7 @@ fun NotificationModel.Companion.fromDomainEntity(
         id = notification.id,
         title = notification.title,
         text = notification.text,
+        ruleId = rule.id,
         dayOfWeek = rule.dayOfWeek,
         time = rule.time.toUIModel()
     )

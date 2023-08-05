@@ -3,7 +3,6 @@ package ldev.myNotifier.utils
 import ldev.myNotifier.domain.entities.Time
 import java.time.DayOfWeek
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 
 fun findNextDateByDayOfWeek(dayOfWeek: DayOfWeek, time: Time): Instant {
@@ -11,8 +10,7 @@ fun findNextDateByDayOfWeek(dayOfWeek: DayOfWeek, time: Time): Instant {
     val zoneId = ZoneId.systemDefault()
     val currentOffsetDateTime = currentInstant.atZone(zoneId).toOffsetDateTime()
 
-    val localDate = LocalDate.now()
-    var daysUntilNextDayOfWeek = dayOfWeek.value - localDate.dayOfWeek.value
+    var daysUntilNextDayOfWeek = dayOfWeek.value - currentOffsetDateTime.dayOfWeek.value
     if (daysUntilNextDayOfWeek < 0) {
         daysUntilNextDayOfWeek += 7
     }

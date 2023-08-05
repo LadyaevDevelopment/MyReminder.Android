@@ -10,12 +10,12 @@ import ldev.myNotifier.data.room.PeriodicNotificationRule.Companion.NOTIFICATION
 import ldev.myNotifier.data.room.PeriodicNotificationRule.Companion.TABLE_NAME
 import ldev.myNotifier.domain.entities.Time
 import java.time.DayOfWeek
-import java.util.Date
 
 @Entity(
     tableName = TABLE_NAME,
     indices = [
-        Index(ID, NOTIFICATION_ID)
+        Index(ID),
+        Index(NOTIFICATION_ID)
     ],
     foreignKeys = [
         ForeignKey(
@@ -30,7 +30,7 @@ data class PeriodicNotificationRule(
     @[PrimaryKey(true) ColumnInfo(name = ID)]
     val id: Long,
     @ColumnInfo(name = NOTIFICATION_ID)
-    val notificationId: Long,
+    val notificationId: Int,
     @ColumnInfo(name = DAY_OF_WEEK)
     val dayOfWeek: DayOfWeek,
     @ColumnInfo(name = TIME)

@@ -3,7 +3,7 @@ package ldev.myNotifier.domain.entities
 import java.util.Date
 
 data class TodayNotification(
-    val id: Long,
+    val id: Int,
     val title: String,
     val date: Date,
     val type: NotificationType,

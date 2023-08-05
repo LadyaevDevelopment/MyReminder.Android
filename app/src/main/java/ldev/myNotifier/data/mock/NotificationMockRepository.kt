@@ -59,11 +59,11 @@ class NotificationMockRepository : NotificationRepository {
 //        return DataResult(success = true, data = notifications)
 //    }
 
-    override suspend fun getOneTimeNotification(id: Long): DataResult<OneTimeNotification?> {
+    override suspend fun getOneTimeNotification(id: Int): DataResult<OneTimeNotification?> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPeriodicNotification(id: Long): DataResult<PeriodicNotificationWithRules?> {
+    override suspend fun getPeriodicNotification(id: Int): DataResult<PeriodicNotificationWithRules?> {
         TODO("Not yet implemented")
     }
 

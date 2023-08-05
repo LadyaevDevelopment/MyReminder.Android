@@ -3,14 +3,14 @@ package ldev.myNotifier.domain.entities
 import java.util.Date
 
 data class OneTimeNotification(
-    val id: Long,
+    val id: Int,
     val title: String,
     val text: String,
     val date: Date
 )
 
 data class PeriodicNotification(
-    val id: Long,
+    val id: Int,
     val title: String,
     val text: String
 )

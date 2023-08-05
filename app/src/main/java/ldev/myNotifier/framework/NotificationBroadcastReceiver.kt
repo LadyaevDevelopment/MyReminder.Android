@@ -1,6 +1,8 @@
 package ldev.myNotifier.framework
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -8,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -37,60 +40,74 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun handleOneTimeNotification(context: Context, oneTimeNotification: NotificationModel.OneTime) {
-        // Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-        val channel = NotificationChannel("channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT)
-        val notificationManager = context.getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
-
+        if (!possibleToShowNotification(context)) {
+            return
+        }
         // TODO: change notification icon
-        val notification = NotificationCompat.Builder(context, "channel_id")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(oneTimeNotification.title)
-            .setContentText(oneTimeNotification.text)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
+        val notification = createNotification(
+            context,
+            R.drawable.ic_launcher_foreground,
+            oneTimeNotification.title,
+            oneTimeNotification.text
+        )
 
         with(NotificationManagerCompat.from(context)) {
-            // check can post notifications
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val permissionResult = ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                if (permissionResult != PackageManager.PERMISSION_GRANTED) {
-                    return
-                }
-            }
-            notify(NumberIncrementer.next(), notification)
+            notify(oneTimeNotification.id, notification)
         }
     }
 
+    @SuppressLint("MissingPermission")
     private fun handlePeriodicNotification(context: Context, periodicNotification: NotificationModel.Periodic) {
+        if (!possibleToShowNotification(context)) {
+            return
+        }
+        // TODO: change notification icon
+        val notification = createNotification(
+            context,
+            R.drawable.ic_launcher_foreground,
+            periodicNotification.title,
+            periodicNotification.text
+        )
+
+        with(NotificationManagerCompat.from(context)) {
+            notify(-periodicNotification.ruleId, notification)
+        }
+    }
+
+    private fun createNotification(
+        context: Context,
+        @DrawableRes iconDrawableRes: Int,
+        title: String,
+        text: String
+    ): Notification {
         // Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
-        val channel = NotificationChannel("channel_id", "channel_name", NotificationManager.IMPORTANCE_DEFAULT)
+        val channel = NotificationChannel(notificationChannelId, notificationChannelName, NotificationManager.IMPORTANCE_DEFAULT)
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
 
-        // TODO: change notification icon
-        val notification = NotificationCompat.Builder(context, "channel_id")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(periodicNotification.title)
-            .setContentText(periodicNotification.text)
+        return NotificationCompat.Builder(context, notificationChannelId)
+            .setSmallIcon(iconDrawableRes)
+            .setContentTitle(title)
+            .setContentText(text)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .build()
+    }
 
-        with(NotificationManagerCompat.from(context)) {
-            // check can post notifications
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val permissionResult = ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-                if (permissionResult != PackageManager.PERMISSION_GRANTED) {
-                    return
-                }
-            }
-            notify(NumberIncrementer.next(), notification)
+    private fun possibleToShowNotification(context: Context) : Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionResult = ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+            return permissionResult == PackageManager.PERMISSION_GRANTED
         }
+        return true
     }
 
     companion object {
         private const val NOTIFICATION = "notification"
+        private const val notificationChannelId = "mainChannelId"
+        private const val notificationChannelName = "mainChannel"
+
         fun makeIntent(context: Context, oneTimeNotification: OneTimeNotification): Intent {
             return Intent(context, NotificationBroadcastReceiver::class.java).apply {
                 putExtra(NOTIFICATION, NotificationModel.fromDomainEntity(oneTimeNotification))

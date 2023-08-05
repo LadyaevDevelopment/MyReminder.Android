@@ -7,7 +7,7 @@ import java.util.Date
 
 @Parcelize
 data class OneTimeNotificationModel(
-    val id: Long,
+    val id: Int,
     val title: String,
     val text: String,
     val date: Date

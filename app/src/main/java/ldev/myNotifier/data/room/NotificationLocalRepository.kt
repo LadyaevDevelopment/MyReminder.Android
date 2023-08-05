@@ -26,14 +26,14 @@ class NotificationLocalRepository @Inject constructor(
         return DataResult(success = true, data = todayNotifications)
     }
 
-    override suspend fun getOneTimeNotification(id: Long): DataResult<OneTimeNotification?> {
+    override suspend fun getOneTimeNotification(id: Int): DataResult<OneTimeNotification?> {
         return DataResult(
             success = true,
             data = notificationDao.getOneTimeNotification(id)?.toDomainEntity()
         )
     }
 
-    override suspend fun getPeriodicNotification(id: Long): DataResult<PeriodicNotificationWithRules?> {
+    override suspend fun getPeriodicNotification(id: Int): DataResult<PeriodicNotificationWithRules?> {
         return DataResult(
             success = true,
             data = notificationDao.getPeriodicNotification(id)?.let {
@@ -49,7 +49,8 @@ class NotificationLocalRepository @Inject constructor(
         return try {
             val notificationId = notificationDao.addOrUpdateOneTimeNotification(
                 notification.toRoomEntity()
-            )
+            ).toInt()
+
             DataResult(success = true, data = notification.copy(id = notificationId))
         } catch (ex: Throwable) {
             DataResult(success = false, errorMessage = ex.message)
@@ -58,13 +59,16 @@ class NotificationLocalRepository @Inject constructor(
 
     override suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): DataResult<PeriodicNotificationWithRules> {
         return try {
-            if (notificationWithRules.notification.id != 0L) {
+            if (notificationWithRules.notification.id != 0) {
                 notificationDao.deleteNotificationRulesExcept(
                     periodicNotificationId = notificationWithRules.notification.id,
                     ruleIdsToKeep = notificationWithRules.rules.map { it.id }.distinct().toList()
                 )
             }
-            val notificationId = notificationDao.addOrUpdatePeriodicNotification(notificationWithRules.notification.toRoomEntity())
+            val notificationId = notificationDao.addOrUpdatePeriodicNotification(
+                notificationWithRules.notification.toRoomEntity()
+            ).toInt()
+
             notificationDao.addOrUpdatePeriodicNotificationRules(
                 notificationWithRules.rules.map { it.toRoomEntity(notificationId) }
             )

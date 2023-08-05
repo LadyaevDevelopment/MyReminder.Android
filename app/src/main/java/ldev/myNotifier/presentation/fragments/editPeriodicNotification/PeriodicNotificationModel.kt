@@ -7,7 +7,7 @@ import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 
 @Parcelize
 data class PeriodicNotificationModel(
-    val id: Long,
+    val id: Int,
     val title: String,
     val text: String,
     val rules: List<NotificationRuleModel>

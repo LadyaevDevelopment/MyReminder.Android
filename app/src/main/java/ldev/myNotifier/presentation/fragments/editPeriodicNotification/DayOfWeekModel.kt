@@ -10,6 +10,6 @@ data class DayOfWeekModel(
 )
 
 data class NotificationTimeModel(
-    val id: Long,
+    val id: Int,
     val time: Time
 )

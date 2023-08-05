@@ -2,7 +2,7 @@ package ldev.myNotifier.data.room
 
 fun OneTimeNotification.toDomainEntity() : ldev.myNotifier.domain.entities.OneTimeNotification {
     return ldev.myNotifier.domain.entities.OneTimeNotification(
-        id = id,
+        id = id.toInt(),
         title = title,
         text = text,
         date = date
@@ -11,7 +11,7 @@ fun OneTimeNotification.toDomainEntity() : ldev.myNotifier.domain.entities.OneTi
 
 fun ldev.myNotifier.domain.entities.OneTimeNotification.toRoomEntity() : OneTimeNotification {
     return OneTimeNotification(
-        id = id,
+        id = id.toLong(),
         title = title,
         text = text,
         date = date,
@@ -20,17 +20,17 @@ fun ldev.myNotifier.domain.entities.OneTimeNotification.toRoomEntity() : OneTime
 
 fun PeriodicNotificationRule.toDomainEntity() : ldev.myNotifier.domain.entities.PeriodicNotificationRule {
     return ldev.myNotifier.domain.entities.PeriodicNotificationRule(
-        id = id,
+        id = id.toInt(),
         dayOfWeek = dayOfWeek,
         time = time,
     )
 }
 
 fun ldev.myNotifier.domain.entities.PeriodicNotificationRule.toRoomEntity(
-    notificationId: Long,
+    notificationId: Int,
 ) : PeriodicNotificationRule {
     return PeriodicNotificationRule(
-        id = id,
+        id = id.toLong(),
         dayOfWeek = dayOfWeek,
         time = time,
         notificationId = notificationId,
@@ -39,7 +39,7 @@ fun ldev.myNotifier.domain.entities.PeriodicNotificationRule.toRoomEntity(
 
 fun PeriodicNotification.toDomainEntity() : ldev.myNotifier.domain.entities.PeriodicNotification {
     return ldev.myNotifier.domain.entities.PeriodicNotification(
-        id = id,
+        id = id.toInt(),
         title = title,
         text = text,
     )
@@ -47,7 +47,7 @@ fun PeriodicNotification.toDomainEntity() : ldev.myNotifier.domain.entities.Peri
 
 fun ldev.myNotifier.domain.entities.PeriodicNotification.toRoomEntity() : PeriodicNotification {
     return PeriodicNotification(
-        id = id,
+        id = id.toLong(),
         title = title,
         text = text,
     )

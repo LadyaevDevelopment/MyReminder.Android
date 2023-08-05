@@ -7,6 +7,7 @@ import android.os.Build
 import ldev.myNotifier.core.AlarmService
 import ldev.myNotifier.data.room.toDate
 import ldev.myNotifier.domain.entities.OneTimeNotification
+import ldev.myNotifier.domain.entities.PeriodicNotificationRule
 import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import java.util.Calendar
 import javax.inject.Inject
@@ -23,8 +24,7 @@ class AlarmManagerService @Inject constructor(
         }
 
         val intent = NotificationBroadcastReceiver.makeIntent(context, notification)
-        // TODO: fix request code
-        val pendingIntent = PendingIntent.getBroadcast(context, notification.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getBroadcast(context, getRequestCode(notification), intent, PendingIntent.FLAG_IMMUTABLE)
 
         val calendar = Calendar.getInstance().apply {
             time = notification.date
@@ -50,8 +50,7 @@ class AlarmManagerService @Inject constructor(
                 notificationWithRules.notification,
                 notificationRule
             )
-            // TODO: fix request code
-            val pendingIntent = PendingIntent.getBroadcast(context, -notificationRule.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntent = PendingIntent.getBroadcast(context, getRequestCode(notificationRule), intent, PendingIntent.FLAG_IMMUTABLE)
 
             val calendar = Calendar.getInstance().apply {
                 time = findNextDateByDayOfWeek(notificationRule.dayOfWeek, notificationRule.time).toDate()
@@ -63,5 +62,13 @@ class AlarmManagerService @Inject constructor(
                 pendingIntent
             )
         }
+    }
+
+    private fun getRequestCode(oneTimeNotification: OneTimeNotification): Int {
+        return oneTimeNotification.id
+    }
+
+    private fun getRequestCode(notificationRule: PeriodicNotificationRule): Int {
+        return -notificationRule.id
     }
 }

@@ -10,7 +10,7 @@ import java.time.DayOfWeek
 
 @Parcelize
 data class NotificationRuleModel(
-    val id: Long,
+    val id: Int,
     val dayOfWeek: DayOfWeek,
     val time: TimeModel
 ) : Parcelable

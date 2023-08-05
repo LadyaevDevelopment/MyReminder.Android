@@ -15,10 +15,10 @@ interface NotificationDao {
 
     @Transaction
     @Query("SELECT * FROM periodic_notifications WHERE periodic_notification_id = :id")
-    suspend fun getPeriodicNotification(id: Long): PeriodicNotificationWithRules?
+    suspend fun getPeriodicNotification(id: Int): PeriodicNotificationWithRules?
 
     @Query("SELECT * FROM one_time_notifications WHERE one_time_notification_id = :id")
-    suspend fun getOneTimeNotification(id: Long): OneTimeNotification?
+    suspend fun getOneTimeNotification(id: Int): OneTimeNotification?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addOrUpdateOneTimeNotification(notification: OneTimeNotification): Long
@@ -35,7 +35,7 @@ interface NotificationDao {
     suspend fun addOrUpdatePeriodicNotification(notification: PeriodicNotification): Long
 
     @Query("DELETE FROM periodic_notification_rules WHERE notification_id = :periodicNotificationId AND periodic_notification_rule_id NOT IN (:ruleIdsToKeep)")
-    suspend fun deleteNotificationRulesExcept(periodicNotificationId: Long, ruleIdsToKeep: List<Long>)
+    suspend fun deleteNotificationRulesExcept(periodicNotificationId: Int, ruleIdsToKeep: List<Int>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addOrUpdatePeriodicNotificationRules(notificationRules: List<PeriodicNotificationRule>)
