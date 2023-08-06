@@ -51,36 +51,40 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
 
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.observe(viewLifecycleOwner) { state ->
-                    lifecycleScope.launch {
-                        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            notificationAdapter.submitList(state.notifications)
-                        }
-                    }
+                subscribeToViewModel()
+            }
+        }
+    }
+
+    private fun subscribeToViewModel() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    notificationAdapter.submitList(state.notifications)
                 }
-                viewModel.command.observe(viewLifecycleOwner) { commandEvent ->
-                    lifecycleScope.launch {
-                        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            commandEvent.getContentIfNotHandled()?.let { command ->
-                                when (command) {
-                                    TodayUiCommand.GetNotifications -> {
-                                        viewModel.getNotifications()
-                                    }
-                                    is TodayUiCommand.GoToEditOneTimeNotification -> {
-                                        findNavController().navigate(
-                                            NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment(
-                                                command.notification?.toUiModel()
-                                            )
-                                        )
-                                    }
-                                    is TodayUiCommand.GoToEditPeriodicNotification -> {
-                                        findNavController().navigate(
-                                            NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment(
-                                                command.notification?.toUiModel()
-                                            )
-                                        )
-                                    }
-                                }
+            }
+        }
+        viewModel.command.observe(viewLifecycleOwner) { commandEvent ->
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    commandEvent.getContentIfNotHandled()?.let { command ->
+                        when (command) {
+                            TodayViewModel.UiAction.GetNotifications -> {
+                                viewModel.getNotifications()
+                            }
+                            is TodayViewModel.UiAction.GoToEditOneTimeNotification -> {
+                                findNavController().navigate(
+                                    NavGraphDirections.actionGlobalToEditOneTimeNotificationFragment(
+                                        command.notification?.toUiModel()
+                                    )
+                                )
+                            }
+                            is TodayViewModel.UiAction.GoToEditPeriodicNotification -> {
+                                findNavController().navigate(
+                                    NavGraphDirections.actionGlobalToEditPeriodicNotificationFragment(
+                                        command.notification?.toUiModel()
+                                    )
+                                )
                             }
                         }
                     }

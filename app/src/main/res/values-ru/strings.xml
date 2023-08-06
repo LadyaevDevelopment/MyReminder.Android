@@ -32,4 +32,14 @@
     <string name="timeNotChosen">Время не выбрано</string>
     <string name="chooseInterval">Выберите интервал</string>
     <string name="exactTime">Точное время</string>
+
+    <string name="cannotOpenNotificationSettings">Не удается открыть настройки уведомлений</string>
+    <string name="needToOpenNotificationSettings">Вам навсегда отказано в разрешении.
+        Вы можете изменить свое решение в настройках приложения. Хотели бы вы открыть настройки приложения?</string>
+
+    <string name="attention">Внимание</string>
+    <string name="needToGrandPostNotificationsPermission">Необходимо предоставить разрешение для отправки уведомлений.
+        Уведомления являются ключевой частью функционала приложения</string>
+
+    <string name="open">Открыть</string>
 </resources>

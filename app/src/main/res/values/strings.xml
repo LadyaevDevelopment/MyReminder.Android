@@ -32,4 +32,14 @@
     <string name="timeNotChosen">Time is not chosen</string>
     <string name="chooseInterval">Choose an interval</string>
     <string name="exactTime">Exact time</string>
+
+    <string name="cannotOpenNotificationSettings">Cannot open notification settings</string>
+    <string name="needToOpenNotificationSettings">You have denied permission forever.
+        You can change your decision in the app settings. Would you like to open app settings?</string>
+
+    <string name="attention">Attention</string>
+    <string name="needToGrandPostNotificationsPermission">You must grant permission to send notifications.
+        Notifications are a key part of the functionality of the application</string>
+
+    <string name="open">Open</string>
 </resources>

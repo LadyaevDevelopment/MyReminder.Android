@@ -19,11 +19,11 @@ class TodayViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(TodayUiState.initial())
-    val state: LiveData<TodayUiState> = _state
+    private val _state = MutableLiveData(UiState.initial())
+    val state: LiveData<UiState> = _state
 
-    private val _command: MutableLiveData<SingleEvent<TodayUiCommand>> = MutableLiveData(SingleEvent(TodayUiCommand.GetNotifications))
-    val command: LiveData<SingleEvent<TodayUiCommand>> = _command
+    private val _command: MutableLiveData<SingleEvent<UiAction>> = MutableLiveData(SingleEvent(UiAction.GetNotifications))
+    val command: LiveData<SingleEvent<UiAction>> = _command
 
     fun getNotifications() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -44,7 +44,7 @@ class TodayViewModel @Inject constructor(
                     val result = notificationRepository.getOneTimeNotification(notification.id)
                     if (result.success) {
                         _command.postValue(
-                            SingleEvent(TodayUiCommand.GoToEditOneTimeNotification(
+                            SingleEvent(UiAction.GoToEditOneTimeNotification(
                                 notification = result.data!!
                             ))
                         )
@@ -54,7 +54,7 @@ class TodayViewModel @Inject constructor(
                     val result = notificationRepository.getPeriodicNotification(notification.id)
                     if (result.success) {
                         _command.postValue(
-                            SingleEvent(TodayUiCommand.GoToEditPeriodicNotification(
+                            SingleEvent(UiAction.GoToEditPeriodicNotification(
                                 notification = result.data!!
                             ))
                         )
@@ -67,7 +67,7 @@ class TodayViewModel @Inject constructor(
     fun tapCreateOneTimeNotificationBtn() {
         _command.postValue(
             SingleEvent(
-                TodayUiCommand.GoToEditOneTimeNotification(
+                UiAction.GoToEditOneTimeNotification(
                     notification = null
                 )
             )
@@ -77,28 +77,28 @@ class TodayViewModel @Inject constructor(
     fun tapCreatePeriodicNotificationBtn() {
         _command.postValue(
             SingleEvent(
-                TodayUiCommand.GoToEditPeriodicNotification(
+                UiAction.GoToEditPeriodicNotification(
                     notification = null
                 )
             )
         )
     }
-}
 
-data class TodayUiState(
-    val notifications: List<TodayNotification>,
-    val errorMessage: String?
-) {
-    companion object {
-        fun initial() : TodayUiState = TodayUiState(
-            notifications = listOf(),
-            errorMessage = null
-        )
+    data class UiState(
+        val notifications: List<TodayNotification>,
+        val errorMessage: String?
+    ) {
+        companion object {
+            fun initial() : UiState = UiState(
+                notifications = listOf(),
+                errorMessage = null
+            )
+        }
     }
-}
 
-sealed class TodayUiCommand {
-    object GetNotifications: TodayUiCommand()
-    data class GoToEditOneTimeNotification(val notification: OneTimeNotification?): TodayUiCommand()
-    data class GoToEditPeriodicNotification(val notification: PeriodicNotificationWithRules?): TodayUiCommand()
+    sealed class UiAction {
+        object GetNotifications: UiAction()
+        data class GoToEditOneTimeNotification(val notification: OneTimeNotification?): UiAction()
+        data class GoToEditPeriodicNotification(val notification: PeriodicNotificationWithRules?): UiAction()
+    }
 }

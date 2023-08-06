@@ -1,5 +1,6 @@
 package ldev.myNotifier.di
 
+import android.app.Application
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
@@ -25,6 +26,8 @@ interface AppComponent {
     @Component.Builder
     interface Builder {
         fun build(): AppComponent
+        @BindsInstance
+        fun withApplication(app: Application): Builder
         @BindsInstance
         fun withContext(context: Context): Builder
     }
