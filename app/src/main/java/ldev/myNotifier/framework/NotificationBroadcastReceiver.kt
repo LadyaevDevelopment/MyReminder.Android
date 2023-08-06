@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -28,6 +29,10 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             @Suppress("DEPRECATION")
             intent.getParcelableExtra(PARCELABLE_NOTIFICATION) as? NotificationModel
         }
+
+        Log.d(TAG, "Broadcast receiver activated" +
+                "\n notification_id = ${notification?.id}" +
+                "\n notification_title = ${notification?.title}")
 
         when (notification) {
             is NotificationModel.OneTime -> {
@@ -115,6 +120,8 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         private const val PARCELABLE_NOTIFICATION = "notification"
         private const val notificationChannelId = "mainChannelId"
         private const val notificationChannelName = "mainChannel"
+
+        private const val TAG = "BROADCAST_RECEIVER"
 
         fun makeIntent(context: Context, oneTimeNotification: OneTimeNotification): Intent {
             return Intent(context, NotificationBroadcastReceiver::class.java).apply {
