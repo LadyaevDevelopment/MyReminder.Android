@@ -6,9 +6,33 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
+def uploadKeyStorePassword = ""
+def uploadKeyAlias = ""
+def uploadKeyPassword = ""
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+if (properties.containsKey('uploadKeyStorePassword')) {
+    uploadKeyStorePassword = properties.getProperty('uploadKeyStorePassword')
+}
+if (properties.containsKey('uploadKeyAlias')) {
+    uploadKeyAlias = properties.getProperty('uploadKeyAlias')
+}
+if (properties.containsKey('uploadKeyPassword')) {
+    uploadKeyPassword = properties.getProperty('uploadKeyPassword')
+}
+
 android {
     namespace 'ldev.myNotifier'
     compileSdk 33
+
+    signingConfigs {
+        config {
+            storeFile file('Keys/upload-key.jks')
+            storePassword uploadKeyStorePassword
+            keyAlias uploadKeyAlias
+            keyPassword uploadKeyPassword
+        }
+    }
 
     defaultConfig {
         applicationId "ldev.myNotifier"
@@ -22,12 +46,12 @@ android {
 
     buildTypes {
         release {
-//            buildConfigField "boolean", "DEBUG", "false"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
         debug {
-//            buildConfigField "boolean", "DEBUG", "true"
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {
