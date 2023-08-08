@@ -58,10 +58,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeToViewModel() {
-        viewModel.command.observe(this) { actionEvent ->
+        viewModel.action.observe(this) { action ->
             lifecycleScope.launch {
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    actionEvent.getContentIfNotHandled()?.let { action ->
+                    action.getIfNotConsumed()?.let { action ->
                         when (action) {
                             MainViewModel.UiAction.AskPostNotificationsPermission -> {
                                 askPostNotificationsPermission()

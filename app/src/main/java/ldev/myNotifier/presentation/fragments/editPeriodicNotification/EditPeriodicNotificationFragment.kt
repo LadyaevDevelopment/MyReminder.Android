@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
@@ -132,6 +133,19 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
                             )
                         }
                     )
+                }
+            }
+        }
+        viewModel.action.observe(viewLifecycleOwner) { action ->
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    action.getIfNotConsumed()?.let { action ->
+                        when (action) {
+                            EditPeriodicNotificationViewModel.UiAction.Back -> {
+                                findNavController().popBackStack()
+                            }
+                        }
+                    }
                 }
             }
         }

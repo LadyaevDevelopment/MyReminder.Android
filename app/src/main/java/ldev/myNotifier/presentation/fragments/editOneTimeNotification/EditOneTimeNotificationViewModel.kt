@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ldev.myNotifier.core.NotificationCoordinator
 import ldev.myNotifier.domain.entities.OneTimeNotification
+import ldev.myNotifier.utils.SingleLiveData
+import ldev.myNotifier.utils.SingleMutableLiveData
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Date
@@ -23,6 +25,9 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
 
     private val _state = MutableLiveData(UiState.initial())
     val state: LiveData<UiState> = _state
+
+    private val _action = SingleMutableLiveData<UiAction>()
+    val action: SingleLiveData<UiAction> = _action
 
     fun setTitle(title: String) {
         _state.postValue(_state.value!!.copy(
@@ -69,6 +74,7 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
                     date = resolveNotificationTime(state.notificationTime)
                 )
             )
+            _action.applyValue(UiAction.Back)
         }
     }
 
@@ -102,6 +108,10 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
                 errorMessage = null
             )
         }
+    }
+
+    sealed class UiAction {
+        object Back: UiAction()
     }
 
     @AssistedFactory

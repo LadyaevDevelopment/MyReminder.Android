@@ -15,6 +15,8 @@ import ldev.myNotifier.domain.entities.PeriodicNotificationRule
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.entities.Time
+import ldev.myNotifier.utils.SingleLiveData
+import ldev.myNotifier.utils.SingleMutableLiveData
 
 import java.time.DayOfWeek
 
@@ -25,6 +27,9 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
 
     private val _state: MutableLiveData<UiState>
     val state: LiveData<UiState> get() = _state
+
+    private val _action = SingleMutableLiveData<UiAction>()
+    val action: SingleLiveData<UiAction> = _action
 
     fun setTitle(title: String) {
         _state.postValue(_state.value!!.copy(
@@ -189,6 +194,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
                     rules = rules
                 )
             )
+            _action.applyValue(UiAction.Back)
         }
     }
 
@@ -218,6 +224,10 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         val checked: Boolean,
         val times: List<NotificationTimeModel>
     )
+
+    sealed class UiAction {
+        object Back: UiAction()
+    }
 
     @AssistedFactory
     interface EditPeriodicNotificationViewModelFactory {

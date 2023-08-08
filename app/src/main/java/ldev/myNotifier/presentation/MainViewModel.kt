@@ -13,8 +13,8 @@ class MainViewModel @Inject constructor(
     private val application: Application
 ) : AndroidViewModel(application) {
 
-    private val _command: MutableLiveData<SingleEvent<UiAction>> = MutableLiveData()
-    val command: LiveData<SingleEvent<UiAction>> = _command
+    private val _action: MutableLiveData<SingleEvent<UiAction>> = MutableLiveData()
+    val action: LiveData<SingleEvent<UiAction>> = _action
 
     init {
         requestPostNotificationsPermissionIfNeeded()
@@ -22,20 +22,20 @@ class MainViewModel @Inject constructor(
 
     private fun requestPostNotificationsPermissionIfNeeded() {
         if (!areNotificationsEnabled(application)) {
-            _command.value = SingleEvent(UiAction.ShowPostNotificationsPermissionExplanationDialog)
+            _action.value = SingleEvent(UiAction.ShowPostNotificationsPermissionExplanationDialog)
         }
     }
 
     fun postNotificationsPermissionExplanationDialogDismissed() {
-        _command.value = SingleEvent(UiAction.AskPostNotificationsPermission)
+        _action.value = SingleEvent(UiAction.AskPostNotificationsPermission)
     }
 
     fun postNotificationsPermissionDeniedForever() {
-        _command.value = SingleEvent(UiAction.ShowNeedToOpenNotificationSettingsDialog)
+        _action.value = SingleEvent(UiAction.ShowNeedToOpenNotificationSettingsDialog)
     }
 
     fun cannotOpenNotificationSettings() {
-        _command.value = SingleEvent((UiAction.ShowCannotOpenNotificationSettingsToast))
+        _action.value = SingleEvent((UiAction.ShowCannotOpenNotificationSettingsToast))
     }
 
     private fun areNotificationsEnabled(context: Context): Boolean {

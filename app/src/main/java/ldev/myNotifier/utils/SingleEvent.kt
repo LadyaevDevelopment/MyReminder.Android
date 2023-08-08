@@ -1,18 +1,19 @@
 package ldev.myNotifier.utils
 
-open class SingleEvent<out T>(private val content: T) {
+open class SingleEvent<out T>(private val data: T) {
 
-    var hasBeenHandled = false
-        private set
+    private var hasBeenHandled = false
 
-    fun getContentIfNotHandled(): T? {
+    fun getIfNotConsumed(): T? {
         return if (hasBeenHandled) {
             null
         } else {
             hasBeenHandled = true
-            content
+            data
         }
     }
 
-    fun peekContent(): T = content
+    fun get(): T {
+        return data
+    }
 }

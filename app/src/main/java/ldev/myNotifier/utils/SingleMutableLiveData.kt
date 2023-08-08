@@ -1,32 +1,15 @@
 package ldev.myNotifier.utils
 
-import androidx.annotation.MainThread
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import java.util.concurrent.atomic.AtomicBoolean
 
-class SingleMutableLiveData<T>(data: T?) : MutableLiveData<T>(data) {
+typealias SingleLiveData<T> = LiveData<SingleEvent<T>>
 
-    private val pending = AtomicBoolean(false)
+class SingleMutableLiveData<T> : MutableLiveData<SingleEvent<T>> {
+    constructor() : super()
+    constructor(value: T) : super(SingleEvent(value))
 
-    @MainThread
-    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
-        super.observe(owner) { t ->
-            if (pending.compareAndSet(true, false)) {
-                observer.onChanged(t)
-            }
-        }
-    }
-
-    @MainThread
-    override fun setValue(t: T?) {
-        pending.set(true)
-        super.setValue(t)
-    }
-
-    @MainThread
-    fun call() {
-        value = null
+    fun applyValue(value: T) {
+        postValue(SingleEvent(value))
     }
 }

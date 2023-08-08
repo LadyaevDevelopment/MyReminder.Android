@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import kotlinx.coroutines.launch
 import ldev.myNotifier.R
@@ -102,6 +103,19 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
                             "${getString(R.string.afterInterval)} ${interval.hours.atLeastTwoDigits()} : ${interval.minutes.atLeastTwoDigits()}"
                         }
                         null -> getString(R.string.timeNotChosen)
+                    }
+                }
+            }
+        }
+        viewModel.action.observe(viewLifecycleOwner) { action ->
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                    action.getIfNotConsumed()?.let { action ->
+                        when (action) {
+                            EditOneTimeNotificationViewModel.UiAction.Back -> {
+                                findNavController().popBackStack()
+                            }
+                        }
                     }
                 }
             }
