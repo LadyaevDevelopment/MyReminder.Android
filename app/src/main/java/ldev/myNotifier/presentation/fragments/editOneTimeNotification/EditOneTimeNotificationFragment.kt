@@ -112,7 +112,7 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
         val intervalPickerBinding = LayoutIntervalPickerBinding.inflate(LayoutInflater.from(requireContext()))
 
         configureNumberPicker(intervalPickerBinding.hourPicker, 0, 23)
-        configureNumberPicker(intervalPickerBinding.minutePicker, 1, 59)
+        configureNumberPicker(intervalPickerBinding.minutePicker, 0, 59)
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.chooseInterval))

@@ -6,6 +6,7 @@ import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
 import ldev.myNotifier.utils.parcel.TimeModel
+import ldev.myNotifier.utils.parcel.toDomainEntity
 import ldev.myNotifier.utils.parcel.toUIModel
 import java.time.DayOfWeek
 import java.util.Date
@@ -57,5 +58,20 @@ fun NotificationModel.Companion.fromDomainEntity(
         ruleId = rule.id,
         dayOfWeek = rule.dayOfWeek,
         time = rule.time.toUIModel()
+    )
+}
+
+fun NotificationModel.Periodic.notificationWithRule(): Pair<PeriodicNotification, PeriodicNotificationRule> {
+    return Pair(
+        first = PeriodicNotification(
+            id = id,
+            title = title,
+            text = text
+        ),
+        second = PeriodicNotificationRule(
+            id = ruleId,
+            dayOfWeek = dayOfWeek,
+            time = time.toDomainEntity()
+        )
     )
 }

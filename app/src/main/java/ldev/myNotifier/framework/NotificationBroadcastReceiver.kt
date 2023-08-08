@@ -15,14 +15,30 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import ldev.myNotifier.MainApplication
 import ldev.myNotifier.R
+import ldev.myNotifier.core.AlarmService
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
+import javax.inject.Inject
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
 
+    //private lateinit var appComponent: AppComponent
+
+    @Inject
+    lateinit var alarmService: AlarmService
+
     override fun onReceive(context: Context, intent: Intent) {
+//        appComponent = DaggerAppComponent.builder()
+//            .withApplication(context.applicationContext as MainApplication)
+//            .withContext(context)
+//            .build()
+//        appComponent.inject(this)
+
+        (context.applicationContext as MainApplication).appComponent.inject(this)
+
         val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(PARCELABLE_NOTIFICATION, NotificationModel::class.java)
         } else {
@@ -50,10 +66,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         if (!possibleToShowNotification(context)) {
             return
         }
-        // TODO: change notification icon
         val notification = createNotification(
             context,
-            R.drawable.ic_launcher_foreground,
+            R.drawable.notification,
             oneTimeNotification.title,
             oneTimeNotification.text
         )
@@ -68,10 +83,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         if (!possibleToShowNotification(context)) {
             return
         }
-        // TODO: change notification icon
         val notification = createNotification(
             context,
-            R.drawable.ic_launcher_foreground,
+            R.drawable.notification,
             periodicNotification.title,
             periodicNotification.text
         )
@@ -79,6 +93,9 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         with(NotificationManagerCompat.from(context)) {
             notify(getNotificationId(periodicNotification), notification)
         }
+
+        val (notificationToReschedule, notificationRule) = periodicNotification.notificationWithRule()
+        alarmService.reschedulePeriodicNotificationRule(notificationToReschedule, notificationRule)
     }
 
     private fun createNotification(
