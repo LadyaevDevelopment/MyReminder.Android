@@ -46,4 +46,7 @@
     <string name="createNotification_subtitle">Выберите тип уведомления</string>
     <string name="createNotification_oneTime">Одноразовое</string>
     <string name="createNotification_periodic">Периодическое</string>
+
+    <string name="notificationTimeNotSpecified">Время уведомления не указано</string>
+    <string name="noPeriodicNoificationRules">Нужно указать как минимум одно правило</string>
 </resources>

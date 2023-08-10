@@ -1,5 +1,6 @@
 package ldev.myNotifier.presentation.fragments.editOneTimeNotification
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ldev.myNotifier.R
 import ldev.myNotifier.core.NotificationCoordinator
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.utils.SingleLiveData
@@ -60,9 +62,7 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
     fun save() {
         val state = _state.value!!
         if (state.notificationTime == null) {
-            _state.postValue(_state.value!!.copy(
-                errorMessage = "Notification time is not specified"
-            ))
+            _action.applyValue(UiAction.ShowToast(R.string.notificationTimeNotSpecified))
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
@@ -98,20 +98,19 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
         val title: String,
         val text: String,
         val notificationTime: NotificationTime?,
-        val errorMessage: String?
     ) {
         companion object {
             fun initial() : UiState = UiState(
                 title = "",
                 text = "",
                 notificationTime = null,
-                errorMessage = null
             )
         }
     }
 
     sealed class UiAction {
         object Back: UiAction()
+        data class ShowToast(@StringRes val messageRes: Int): UiAction()
     }
 
     @AssistedFactory

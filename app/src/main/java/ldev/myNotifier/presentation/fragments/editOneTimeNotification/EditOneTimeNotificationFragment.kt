@@ -17,6 +17,7 @@ import android.view.View
 import android.text.format.DateFormat
 import android.view.ViewGroup
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -34,7 +35,11 @@ import ldev.myNotifier.utils.BaseFragment
 import ldev.myNotifier.utils.atLeastTwoDigits
 import ldev.myNotifier.utils.formatAsFullDayFullMonthFullYear
 import ldev.myNotifier.utils.formatAsHoursMinutes
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotificationBinding>() {
@@ -75,7 +80,9 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
             showIntervalPicker()
         }
         binding.exactTimeBtn.setOnClickListener {
-            showDateTimePicker()
+            val initialDateTime = viewModel.state.value?.notificationTime
+                    as? EditOneTimeNotificationViewModel.NotificationTime.DateTime
+            showDateTimePicker(initialDateTime?.dateTime)
         }
         binding.saveBtn.setOnClickListener {
             viewModel.save()
@@ -115,6 +122,9 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
                             EditOneTimeNotificationViewModel.UiAction.Back -> {
                                 findNavController().popBackStack()
                             }
+                            is EditOneTimeNotificationViewModel.UiAction.ShowToast -> {
+                                Toast.makeText(requireContext(), action.messageRes, Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }
@@ -146,8 +156,22 @@ class EditOneTimeNotificationFragment : BaseFragment<FragmentEditOneTimeNotifica
         dialog.show()
     }
 
-    private fun showDateTimePicker() {
+    private fun showDateTimePicker(initialDate: Date?) {
         val calendar = Calendar.getInstance()
+
+        if (initialDate != null) {
+            val localDateTime: LocalDateTime = Instant.ofEpochMilli(initialDate.time)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+
+            calendar.set(Calendar.YEAR, localDateTime.year)
+            calendar.set(Calendar.MONTH, localDateTime.monthValue - 1)
+            calendar.set(Calendar.DAY_OF_MONTH, localDateTime.dayOfMonth)
+            calendar.set(Calendar.HOUR_OF_DAY, localDateTime.hour)
+            calendar.set(Calendar.MINUTE, localDateTime.minute)
+            calendar.set(Calendar.SECOND, localDateTime.second)
+        }
+
         val initialYear = calendar.get(Calendar.YEAR)
         val initialMonth = calendar.get(Calendar.MONTH)
         val initialDay = calendar.get(Calendar.DAY_OF_MONTH)

@@ -46,4 +46,7 @@
     <string name="createNotification_subtitle">Select the notification type</string>
     <string name="createNotification_oneTime">One time</string>
     <string name="createNotification_periodic">Periodic</string>
+
+    <string name="notificationTimeNotSpecified">Notification time is not specified</string>
+    <string name="noPeriodicNoificationRules">You must specify at least one notification time rule</string>
 </resources>

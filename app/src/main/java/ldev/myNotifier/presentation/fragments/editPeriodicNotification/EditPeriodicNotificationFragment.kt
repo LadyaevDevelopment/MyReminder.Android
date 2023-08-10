@@ -6,6 +6,7 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
@@ -143,6 +144,9 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
                         when (action) {
                             EditPeriodicNotificationViewModel.UiAction.Back -> {
                                 findNavController().popBackStack()
+                            }
+                            is EditPeriodicNotificationViewModel.UiAction.ShowToast -> {
+                                Toast.makeText(requireContext(), action.messageRes, Toast.LENGTH_LONG).show()
                             }
                         }
                     }

@@ -1,5 +1,6 @@
 package ldev.myNotifier.presentation.fragments.editPeriodicNotification
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ldev.myNotifier.R
 import ldev.myNotifier.core.NotificationCoordinator
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
 import ldev.myNotifier.domain.entities.PeriodicNotification
@@ -178,9 +180,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
         }.flatten()
 
         if (rules.isEmpty()) {
-            _state.postValue(_state.value!!.copy(
-                errorMessage = "You must specify at least one notification time rule"
-            ))
+            _action.applyValue(UiAction.ShowToast(R.string.noPeriodicNoificationRules))
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
@@ -201,7 +201,6 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
     data class UiState(
         val title: String,
         val text: String,
-        val errorMessage: String?,
         val allDaysOfWeekChecked: Boolean,
         val daysOfWeek: Map<DayOfWeek, DayOfWeekState>,
     ) {
@@ -211,7 +210,6 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
             fun initial() : UiState = UiState(
                 title = "",
                 text = "",
-                errorMessage = null,
                 allDaysOfWeekChecked = false,
                 daysOfWeek = DayOfWeek.values()
                     .map { Pair(it, DayOfWeekState(checked = false, times = listOf())) }
@@ -227,6 +225,7 @@ class EditPeriodicNotificationViewModel @AssistedInject constructor(
 
     sealed class UiAction {
         object Back: UiAction()
+        data class ShowToast(@StringRes val messageRes: Int): UiAction()
     }
 
     @AssistedFactory
