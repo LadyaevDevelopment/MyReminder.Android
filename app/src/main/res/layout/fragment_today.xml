@@ -29,6 +29,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:id="@+id/btn"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        style="@style/CustomCardView"-->
+<!--        app:cardBackgroundColor="@color/brightRed"-->
+<!--        android:clickable="true"-->
+<!--        app:layout_constraintHorizontal_bias="0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/today"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/addNotificationBtn">-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addNotificationBtn"
         android:layout_width="56dp"

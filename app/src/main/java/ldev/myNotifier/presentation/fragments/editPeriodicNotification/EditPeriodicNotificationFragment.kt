@@ -44,7 +44,7 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         )
     }
 
-    private var _daysOfWeekAdapter: FingerprintAdapter? = FingerprintAdapter(listOf(
+    private val daysOfWeekAdapter: FingerprintAdapter = FingerprintAdapter(listOf(
         DayOfWeekFingerprint(
             onAddButtonTapped = fun (dayOfWeek) {
                 showTimePicker { time ->
@@ -65,7 +65,6 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
             },
         )
     ))
-    private val daysOfWeekAdapter = _daysOfWeekAdapter!!
 
     override fun getContentInflater(): (LayoutInflater, ViewGroup?, Boolean) -> FragmentEditPeriodicNotificationBinding {
         return FragmentEditPeriodicNotificationBinding::inflate
@@ -171,9 +170,9 @@ class EditPeriodicNotificationFragment : BaseFragment<FragmentEditPeriodicNotifi
         timePickerDialog.show()
     }
 
-    override fun onDestroy() {
-        _daysOfWeekAdapter = null
-        super.onDestroy()
+    override fun onDestroyView() {
+        binding.daysOfWeek.adapter = null
+        super.onDestroyView()
     }
 
 }

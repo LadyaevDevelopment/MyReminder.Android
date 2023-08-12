@@ -6,6 +6,10 @@
     <string name="bottomNavigationMenu_settings">настройки</string>
     <string name="inDevelopment">В разработке</string>
 
+    <string name="yesterday">Вчера</string>
+    <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
+
     <string name="short_monday">ПН</string>
     <string name="short_tuesday">ВТ</string>
     <string name="short_wednesday">СР</string>
@@ -29,7 +33,6 @@
     <string name="appLanguage">Язык приложения</string>
     <string name="downloadConfig">Сохранить конфиг</string>
     <string name="uploadConfig">Загрузить конфиг</string>
-    <string name="today">Сегодня</string>
     <string name="timeNotChosen">Время не выбрано</string>
     <string name="chooseInterval">Выберите интервал</string>
     <string name="exactTime">Точное время</string>

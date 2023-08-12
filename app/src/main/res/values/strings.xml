@@ -6,6 +6,10 @@
     <string name="bottomNavigationMenu_settings">settings</string>
     <string name="inDevelopment">In the development</string>
 
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+
     <string name="short_monday">MON</string>
     <string name="short_tuesday">TUE</string>
     <string name="short_wednesday">WED</string>
@@ -29,7 +33,6 @@
     <string name="appLanguage">App language</string>
     <string name="downloadConfig">Download config</string>
     <string name="uploadConfig">Upload config</string>
-    <string name="today">Today</string>
     <string name="timeNotChosen">Time is not chosen</string>
     <string name="chooseInterval">Choose an interval</string>
     <string name="exactTime">Exact time</string>

@@ -3,4 +3,53 @@
     <style name="CustomFontStyle">
         <item name="android:fontFamily">@font/sf_regular</item>
     </style>
+
+    <style name="TopCornersCardShapeAppearance" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomRight">4dp</item>
+        <item name="cornerSizeBottomLeft">4dp</item>
+    </style>
+    <style name="BottomCornersCardShapeAppearance" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">4dp</item>
+        <item name="cornerSizeTopRight">4dp</item>
+        <item name="cornerSizeBottomRight">16dp</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+    </style>
+    <style name="LeftCornersCardShapeAppearance" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">4dp</item>
+        <item name="cornerSizeBottomRight">4dp</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+    </style>
+    <style name="RightCornersCardShapeAppearance" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">4dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomRight">16dp</item>
+        <item name="cornerSizeBottomLeft">4dp</item>
+    </style>
+
+    <style name="ChooseDayDialogButton" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+    <style name="ChooseDayDialogTopButton" parent="ChooseDayDialogButton">
+        <item name="shapeAppearance">@style/TopCornersCardShapeAppearance</item>
+    </style>
+    <style name="ChooseDayDialogMiddleButton" parent="ChooseDayDialogButton">
+        <item name="cardCornerRadius">4dp</item>
+    </style>
+    <style name="ChooseDayDialogBottomButton" parent="ChooseDayDialogButton">
+        <item name="shapeAppearance">@style/BottomCornersCardShapeAppearance</item>
+    </style>
+    <style name="ChooseDayDialogLeftButton" parent="ChooseDayDialogButton">
+        <item name="shapeAppearance">@style/LeftCornersCardShapeAppearance</item>
+    </style>
+    <style name="ChooseDayDialogRightButton" parent="ChooseDayDialogButton">
+        <item name="shapeAppearance">@style/RightCornersCardShapeAppearance</item>
+    </style>
 </resources>

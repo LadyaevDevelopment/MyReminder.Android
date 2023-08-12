@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:strokeWidth="0dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="24dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Выберите день"
+            android:textSize="20sp"
+            android:textAlignment="center" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/yesterday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            style="@style/ChooseDayDialogTopButton"
+            app:cardBackgroundColor="@color/lightRed"
+            android:clickable="true"
+            app:contentPadding="0dp"
+            app:cardPreventCornerOverlap="false">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/yesterday"
+                android:textSize="16sp"
+                android:textAlignment="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/today"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            style="@style/ChooseDayDialogMiddleButton"
+            app:cardBackgroundColor="@color/lightRed"
+            android:clickable="true"
+            app:contentPadding="0dp"
+            app:cardPreventCornerOverlap="false">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/today"
+                android:textSize="16sp"
+                android:textAlignment="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/tomorrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:contentPadding="0dp"
+            app:cardPreventCornerOverlap="false"
+            style="@style/ChooseDayDialogBottomButton"
+            app:cardBackgroundColor="@color/lightRed"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="@string/tomorrow"
+                android:textSize="16sp"
+                android:textAlignment="center" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/ChooseDayDialogLeftButton"
+                app:cardBackgroundColor="@color/lightRed"
+                android:clickable="true"
+                app:contentPadding="0dp"
+                app:cardPreventCornerOverlap="false">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="ПН"
+                    android:textSize="16sp"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                style="@style/ChooseDayDialogMiddleButton"
+                app:cardBackgroundColor="@color/lightRed"
+                android:clickable="true"
+                app:contentPadding="0dp"
+                app:cardPreventCornerOverlap="false">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="ВТ"
+                    android:textSize="16sp"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                style="@style/ChooseDayDialogMiddleButton"
+                app:cardBackgroundColor="@color/lightRed"
+                android:clickable="true"
+                app:contentPadding="0dp"
+                app:cardPreventCornerOverlap="false">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="СР"
+                    android:textSize="16sp"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                style="@style/ChooseDayDialogMiddleButton"
+                app:cardBackgroundColor="@color/lightRed"
+                android:clickable="true"
+                app:contentPadding="0dp"
+                app:cardPreventCornerOverlap="false">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="ЧТ"
+                    android:textSize="16sp"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                style="@style/ChooseDayDialogRightButton"
+                app:cardBackgroundColor="@color/lightRed"
+                android:clickable="true"
+                app:contentPadding="0dp"
+                app:cardPreventCornerOverlap="false">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="ПТ"
+                    android:textSize="16sp"
+                    android:textAlignment="center" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

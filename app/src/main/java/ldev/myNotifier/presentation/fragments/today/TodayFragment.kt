@@ -1,9 +1,16 @@
 package ldev.myNotifier.presentation.fragments.today
 
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.RenderEffect
+import android.graphics.Shader
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import ldev.myNotifier.NavGraphDirections
 import ldev.myNotifier.R
+import ldev.myNotifier.databinding.ChooseDayDialogBinding
 import ldev.myNotifier.databinding.FragmentTodayBinding
 import ldev.myNotifier.presentation.appComponent
 import ldev.myNotifier.presentation.fragments.editOneTimeNotification.toUiModel
@@ -26,6 +34,7 @@ import ldev.myNotifier.utils.recyclerView.FingerprintAdapter
 import java.util.Date
 import javax.inject.Inject
 
+
 class TodayFragment : BaseFragment<FragmentTodayBinding>() {
 
     private lateinit var viewModel: TodayViewModel
@@ -35,10 +44,9 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
     private val notificationFingerPrint = NotificationFingerprint { notification ->
         viewModel.tapNotification(notification)
     }
-    private var _notificationAdapter: FingerprintAdapter? = FingerprintAdapter(
+    private val notificationAdapter: FingerprintAdapter = FingerprintAdapter(
         listOf(notificationFingerPrint)
     )
-    private val notificationAdapter = _notificationAdapter!!
 
     override fun getContentInflater(): (LayoutInflater, ViewGroup?, Boolean) -> FragmentTodayBinding {
         return FragmentTodayBinding::inflate
@@ -113,6 +121,35 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
                 )
             )
         }
+
+        binding.title.setOnClickListener {
+            val customDialog = Dialog(requireContext())
+            val contentViewBinding = ChooseDayDialogBinding.inflate(LayoutInflater.from(requireContext()), null, false)
+            customDialog.setContentView(contentViewBinding.root)
+            contentViewBinding.card.apply {
+                layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                    leftMargin = requireContext().dpToPixels(16)
+                    rightMargin = requireContext().dpToPixels(16)
+                }
+            }
+            customDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            //customDialog.window?.attributes?.windowAnimations = R.style.animation;
+            customDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                customDialog.setOnDismissListener {
+                    requireActivity().window!!.decorView.setRenderEffect(null)
+                }
+                requireActivity().window!!.decorView.setRenderEffect(
+                    RenderEffect.createBlurEffect(
+                        30f,
+                        30f,
+                        Shader.TileMode.CLAMP
+                    ))
+            }
+
+            customDialog.show()
+        }
     }
 
     private fun showNewNotificationDialog() {
@@ -131,9 +168,9 @@ class TodayFragment : BaseFragment<FragmentTodayBinding>() {
         alertDialogBuilder.create().show()
     }
 
-    override fun onDestroy() {
-        _notificationAdapter = null
-        super.onDestroy()
+    override fun onDestroyView() {
+        binding.rvNotifications.adapter = null
+        super.onDestroyView()
     }
 
 }

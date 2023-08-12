@@ -5,13 +5,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import ldev.myNotifier.MainApplication
 import ldev.myNotifier.R
 import ldev.myNotifier.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,6 +57,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        val intent = Intent()
+//        val packageName = packageName
+//        val pm = getSystemService(POWER_SERVICE) as PowerManager
+//        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+//            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+//            intent.data = Uri.parse("package:$packageName")
+//            startActivity(intent)
+//        }
+//    }
 
     private fun subscribeToViewModel() {
         viewModel.action.observe(this) { action ->
