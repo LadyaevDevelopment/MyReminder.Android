@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ldev.myNotifier.domain.entities.NotificationType
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
@@ -29,12 +28,10 @@ class TodayViewModel @Inject constructor(
     fun getNotifications() {
         viewModelScope.launch(Dispatchers.IO) {
             val result = notificationRepository.getNotificationsForToday()
-            withContext(Dispatchers.Main) {
-                _state.postValue(_state.value!!.copy(
-                    notifications = result.data.orEmpty(),
-                    errorMessage = result.errorMessage
-                ))
-            }
+            _state.postValue(_state.value!!.copy(
+                notifications = result.data.orEmpty(),
+                errorMessage = result.errorMessage
+            ))
         }
     }
 

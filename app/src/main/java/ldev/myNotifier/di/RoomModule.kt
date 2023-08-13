@@ -5,6 +5,7 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import ldev.myNotifier.data.room.AppDatabase
+import ldev.myNotifier.data.room.DbLogDao
 import ldev.myNotifier.data.room.NotificationDao
 import javax.inject.Singleton
 
@@ -21,6 +22,11 @@ class RoomModule {
     @Provides
     fun provideNotificationDao(appDatabase: AppDatabase): NotificationDao {
         return appDatabase.getNotificationDao()
+    }
+
+    @Provides
+    fun provideDbLogDao(appDatabase: AppDatabase): DbLogDao {
+        return appDatabase.getDbLogDao()
     }
 
 }

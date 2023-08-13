@@ -12,7 +12,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ldev.myNotifier.R
-import ldev.myNotifier.core.NotificationCoordinator
+import ldev.myNotifier.core.NotificationBusinessLogic
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.utils.SingleLiveData
 import ldev.myNotifier.utils.SingleMutableLiveData
@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Date
 
 class EditOneTimeNotificationViewModel @AssistedInject constructor(
-    private val notificationCoordinator: NotificationCoordinator,
+    private val notificationBusinessLogic: NotificationBusinessLogic,
     @Assisted private val notification: OneTimeNotification?
 ) : ViewModel() {
 
@@ -66,12 +66,13 @@ class EditOneTimeNotificationViewModel @AssistedInject constructor(
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
-            notificationCoordinator.saveOneTimeNotification(
+            notificationBusinessLogic.saveOneTimeNotification(
                 notification = OneTimeNotification(
                     id = notification?.id ?: 0,
                     title = state.title,
                     text = state.text,
-                    date = resolveNotificationTime(state.notificationTime)
+                    date = resolveNotificationTime(state.notificationTime),
+                    isActive = notification?.isActive ?: true
                 )
             )
             _action.applyValue(UiAction.Back)

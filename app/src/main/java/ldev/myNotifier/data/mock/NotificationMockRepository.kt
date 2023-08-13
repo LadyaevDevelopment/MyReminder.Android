@@ -11,26 +11,6 @@ import java.util.Date
 
 class NotificationMockRepository : NotificationRepository {
 
-//    private val notifications = listOf<Notification>(
-//        OneTimeNotification(id = 1, title = "1", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 2, title = "2", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 3, title = "3", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 4, title = "4", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 5, title = "5", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 6, title = "6", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 7, title = "7", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 8, title = "8", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 9, title = "9", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 10, title = "10", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 11, title = "11", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 12, title = "12", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 13, title = "13", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 14, title = "14", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 15, title = "15", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 16, title = "16", text = "It's notification", date = Date()),
-//        OneTimeNotification(id = 17, title = "17", text = "It's notification", date = Date()),
-//    )
-
     private val notificationsForToday = listOf(
         TodayNotification(id = 1, title = "Notification 1", date = Date(), status = TodayNotificationStatus.Postponed, type = NotificationType.OneTime),
         TodayNotification(id = 2, title = "Notification 2", date = Date(), status = TodayNotificationStatus.Postponed, type = NotificationType.OneTime),
@@ -52,14 +32,18 @@ class NotificationMockRepository : NotificationRepository {
     )
 
     override suspend fun getNotificationsForToday(): DataResult<List<TodayNotification>> {
-        return DataResult(success = true, data = notificationsForToday)
+        TODO("Not yet implemented")
     }
 
-//    override suspend fun getAllNotifications(): DataResult<List<Notification>> {
-//        return DataResult(success = true, data = notifications)
-//    }
-
     override suspend fun getOneTimeNotification(id: Int): DataResult<OneTimeNotification?> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getOneTimeNotificationsWithActive(isActive: Boolean): DataResult<List<OneTimeNotification>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getPeriodicNotifications(): DataResult<List<PeriodicNotificationWithRules>> {
         TODO("Not yet implemented")
     }
 
@@ -68,11 +52,11 @@ class NotificationMockRepository : NotificationRepository {
     }
 
     override suspend fun saveOneTimeNotification(notification: OneTimeNotification): DataResult<OneTimeNotification> {
-        return DataResult(success = true)
+        TODO("Not yet implemented")
     }
 
     override suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules): DataResult<PeriodicNotificationWithRules> {
-        return DataResult(success = true)
+        TODO("Not yet implemented")
     }
 
 }

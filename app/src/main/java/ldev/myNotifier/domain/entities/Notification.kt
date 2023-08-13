@@ -6,7 +6,8 @@ data class OneTimeNotification(
     val id: Int,
     val title: String,
     val text: String,
-    val date: Date
+    val date: Date,
+    val isActive: Boolean
 )
 
 data class PeriodicNotification(

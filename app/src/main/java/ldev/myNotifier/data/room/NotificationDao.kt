@@ -12,6 +12,9 @@ interface NotificationDao {
     @Query("SELECT * FROM one_time_notifications WHERE date BETWEEN :startTimeMillis AND :endTimeMillis - 1")
     suspend fun getOneTimeNotificationsInDateRange(startTimeMillis: Long, endTimeMillis: Long): List<OneTimeNotification>
 
+    @Query("SELECT * FROM one_time_notifications WHERE is_active = :isActive")
+    suspend fun getOneTimeNotificationsWithActive(isActive: Boolean): List<OneTimeNotification>
+
     @Transaction
     @Query("SELECT * FROM periodic_notifications WHERE periodic_notification_id = :id")
     suspend fun getPeriodicNotification(id: Int): PeriodicNotificationWithRules?

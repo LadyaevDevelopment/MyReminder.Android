@@ -9,13 +9,16 @@ import androidx.room.TypeConverters
     entities = [
         OneTimeNotification::class,
         PeriodicNotification::class,
-        PeriodicNotificationRule::class
+        PeriodicNotificationRule::class,
+        DbLog::class
     ],
 )
 @TypeConverters(DateConverter::class, DayOfWeekConverter::class, TimeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getNotificationDao(): NotificationDao
+
+    abstract fun getDbLogDao(): DbLogDao
 
     companion object {
         const val databaseName = "app_database.db"

@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
+import ldev.myNotifier.framework.BootCompletedBroadcastReceiver
 import ldev.myNotifier.framework.NotificationBroadcastReceiver
 import ldev.myNotifier.presentation.MainActivity
 import ldev.myNotifier.presentation.fragments.all.AllFragment
@@ -19,6 +20,7 @@ interface AppComponent {
 
     fun inject(activity: MainActivity)
     fun inject(receiver: NotificationBroadcastReceiver)
+    fun inject(receiver: BootCompletedBroadcastReceiver)
     fun inject(fragment: TodayFragment)
     fun inject(fragment: AllFragment)
     fun inject(fragment: SettingsFragment)

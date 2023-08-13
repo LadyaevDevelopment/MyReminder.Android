@@ -4,8 +4,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
-import android.util.Log
-import ldev.myNotifier.core.AlarmService
+import kotlinx.coroutines.Dispatchers
+import ldev.myNotifier.core.AlarmProxy
+import ldev.myNotifier.core.CustomLogBusinessLogic
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
@@ -14,10 +15,12 @@ import java.util.Calendar
 import javax.inject.Inject
 import ldev.myNotifier.utils.findNextDateByDayOfWeek
 
-class AlarmServiceImpl @Inject constructor(
-    private val context: Context
-) : AlarmService {
-    override fun setupAlarmWithOneTimeNotification(notification: OneTimeNotification) {
+class AlarmProxyImpl @Inject constructor(
+    private val context: Context,
+    private val customLogBusinessLogic: CustomLogBusinessLogic
+) : AlarmProxy {
+
+    override suspend fun setupAlarmWithOneTimeNotification(notification: OneTimeNotification) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // check can setup exact time alarm
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
@@ -31,7 +34,7 @@ class AlarmServiceImpl @Inject constructor(
             time = notification.date
         }
 
-        Log.d(TAG, "One time notification activated" +
+        customLogBusinessLogic.logDebug(TAG, "One time notification activated" +
                 "\n id = ${notification.id}" +
                 "\n title = ${notification.title}" +
                 "\n time = ${calendar.time}")
@@ -43,7 +46,7 @@ class AlarmServiceImpl @Inject constructor(
         )
     }
 
-    override fun setupAlarmWithPeriodicNotification(notificationWithRules: PeriodicNotificationWithRules) {
+    override suspend fun setupAlarmWithPeriodicNotification(notificationWithRules: PeriodicNotificationWithRules) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // check can setup exact time alarm
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
@@ -62,7 +65,7 @@ class AlarmServiceImpl @Inject constructor(
                 time = findNextDateByDayOfWeek(notificationRule.dayOfWeek, notificationRule.time, false)
             }
 
-            Log.d(TAG, "Periodic notification rule activated" +
+            customLogBusinessLogic.logDebug(TAG, "Periodic notification rule activated" +
                     "\n notification_id = ${notificationWithRules.notification.id}" +
                     "\n notification_title = ${notificationWithRules.notification.title}" +
                     "\n rule_id = ${notificationRule.id}" +
@@ -76,7 +79,7 @@ class AlarmServiceImpl @Inject constructor(
         }
     }
 
-    override fun reschedulePeriodicNotificationRule(notification: PeriodicNotification, notificationRule: PeriodicNotificationRule) {
+    override suspend fun reschedulePeriodicNotificationRule(notification: PeriodicNotification, notificationRule: PeriodicNotificationRule) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         // check can setup exact time alarm
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
@@ -94,7 +97,7 @@ class AlarmServiceImpl @Inject constructor(
             time = findNextDateByDayOfWeek(notificationRule.dayOfWeek, notificationRule.time, true)
         }
 
-        Log.d(TAG, "Periodic notification rule activated (rescheduled)" +
+        customLogBusinessLogic.logDebug(TAG, "Periodic notification rule activated (rescheduled)" +
                 "\n notification_id = ${notification.id}" +
                 "\n notification_title = ${notification.title}" +
                 "\n rule_id = ${notificationRule.id}" +

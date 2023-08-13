@@ -10,14 +10,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ldev.myNotifier.MainApplication
 import ldev.myNotifier.R
-import ldev.myNotifier.core.AlarmService
+import ldev.myNotifier.core.AlarmProxy
+import ldev.myNotifier.core.CustomLogBusinessLogic
 import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.PeriodicNotificationRule
@@ -25,18 +28,15 @@ import javax.inject.Inject
 
 class NotificationBroadcastReceiver : BroadcastReceiver() {
 
-    //private lateinit var appComponent: AppComponent
+    @Inject
+    lateinit var alarmProxy: AlarmProxy
 
     @Inject
-    lateinit var alarmService: AlarmService
+    lateinit var customLogBusinessLogic: CustomLogBusinessLogic
+
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onReceive(context: Context, intent: Intent) {
-//        appComponent = DaggerAppComponent.builder()
-//            .withApplication(context.applicationContext as MainApplication)
-//            .withContext(context)
-//            .build()
-//        appComponent.inject(this)
-
         (context.applicationContext as MainApplication).appComponent.inject(this)
 
         val notification = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -46,18 +46,25 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             intent.getParcelableExtra(PARCELABLE_NOTIFICATION) as? NotificationModel
         }
 
-        Log.d(TAG, "Broadcast receiver activated" +
-                "\n notification_id = ${notification?.id}" +
-                "\n notification_title = ${notification?.title}")
+        val pendingResult = goAsync()
+        coroutineScope.launch {
+            when (notification) {
+                is NotificationModel.OneTime -> {
+                    handleOneTimeNotification(context, notification)
+                }
+                is NotificationModel.Periodic -> {
+                    handlePeriodicNotification(context, notification)
+                }
+                null -> {
 
-        when (notification) {
-            is NotificationModel.OneTime -> {
-                handleOneTimeNotification(context, notification)
+                }
             }
-            is NotificationModel.Periodic -> {
-                handlePeriodicNotification(context, notification)
-            }
-            null -> return
+
+            customLogBusinessLogic.logDebug(TAG, "Notification broadcast receiver activated" +
+                    "\n notification_id = ${notification?.id}" +
+                    "\n notification_title = ${notification?.title}")
+
+            pendingResult.finish()
         }
     }
 
@@ -79,7 +86,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun handlePeriodicNotification(context: Context, periodicNotification: NotificationModel.Periodic) {
+    private suspend fun handlePeriodicNotification(context: Context, periodicNotification: NotificationModel.Periodic) {
         if (!possibleToShowNotification(context)) {
             return
         }
@@ -95,7 +102,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         }
 
         val (notificationToReschedule, notificationRule) = periodicNotification.notificationWithRule()
-        alarmService.reschedulePeriodicNotificationRule(notificationToReschedule, notificationRule)
+        alarmProxy.reschedulePeriodicNotificationRule(notificationToReschedule, notificationRule)
     }
 
     private fun createNotification(
@@ -138,7 +145,7 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
         private const val notificationChannelId = "mainChannelId"
         private const val notificationChannelName = "mainChannel"
 
-        private const val TAG = "BROADCAST_RECEIVER"
+        private const val TAG = "NOTIFICATION_BROADCAST_RECEIVER"
 
         fun makeIntent(context: Context, oneTimeNotification: OneTimeNotification): Intent {
             return Intent(context, NotificationBroadcastReceiver::class.java).apply {

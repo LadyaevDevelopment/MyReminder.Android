@@ -5,21 +5,21 @@ import ldev.myNotifier.domain.entities.PeriodicNotificationWithRules
 import ldev.myNotifier.domain.repositories.NotificationRepository
 import javax.inject.Inject
 
-class NotificationCoordinator @Inject constructor(
-    private val alarmService: AlarmService,
+class NotificationBusinessLogic @Inject constructor(
+    private val alarmProxy: AlarmProxy,
     private val notificationRepository: NotificationRepository
 ) {
     suspend fun saveOneTimeNotification(notification: OneTimeNotification) {
         val result = notificationRepository.saveOneTimeNotification(notification)
         if (result.success) {
-            alarmService.setupAlarmWithOneTimeNotification(result.data!!)
+            alarmProxy.setupAlarmWithOneTimeNotification(result.data!!)
         }
     }
 
     suspend fun savePeriodicNotification(notificationWithRules: PeriodicNotificationWithRules) {
         val result = notificationRepository.savePeriodicNotification(notificationWithRules)
         if (result.success) {
-            alarmService.setupAlarmWithPeriodicNotification(result.data!!)
+            alarmProxy.setupAlarmWithPeriodicNotification(result.data!!)
         }
     }
 }

@@ -10,7 +10,8 @@ data class OneTimeNotificationModel(
     val id: Int,
     val title: String,
     val text: String,
-    val date: Date
+    val date: Date,
+    val isActive: Boolean
 ) : Parcelable
 
 fun OneTimeNotification.toUiModel() : OneTimeNotificationModel {
@@ -18,7 +19,8 @@ fun OneTimeNotification.toUiModel() : OneTimeNotificationModel {
         id = id,
         title = title,
         text = text,
-        date = date
+        date = date,
+        isActive = isActive
     )
 }
 
@@ -27,6 +29,7 @@ fun OneTimeNotificationModel.toDomainEntity(): OneTimeNotification {
         id = id,
         title = title,
         text = text,
-        date = date
+        date = date,
+        isActive = isActive
     )
 }

@@ -13,38 +13,74 @@ class NotificationLocalRepository @Inject constructor(
 ) : NotificationRepository {
 
     override suspend fun getNotificationsForToday(): DataResult<List<TodayNotification>> {
-        val localDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
-        val startTimeMillis = localDateTime.toDate().time
-        val endTimeMillis = localDateTime.plusDays(1).toDate().time
+        // TODO: fix bug: periodic notification created in the same day of week but earlier time: do not show such notifications in list
+        return try {
+            val localDateTime = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0)
+            val startTimeMillis = localDateTime.toDate().time
+            val endTimeMillis = localDateTime.plusDays(1).toDate().time
 
-        val oneTimeNotifications = notificationDao.getOneTimeNotificationsInDateRange(startTimeMillis, endTimeMillis)
-            .map { TodayNotification.oneTimeNotification(it.toDomainEntity()) }
+            val oneTimeNotifications = notificationDao.getOneTimeNotificationsInDateRange(startTimeMillis, endTimeMillis)
+                .map { TodayNotification.oneTimeNotification(it.toDomainEntity()) }
 
-        val periodicNotifications = notificationDao.getPeriodicNotificationRulesForDayOfWeek(localDateTime.dayOfWeek)
-            .map { TodayNotification.periodicNotification(it.notification.toDomainEntity(), it.rule.toDomainEntity()) }
+            val periodicNotifications = notificationDao.getPeriodicNotificationRulesForDayOfWeek(localDateTime.dayOfWeek)
+                .map { TodayNotification.periodicNotification(it.notification.toDomainEntity(), it.rule.toDomainEntity()) }
 
-        val todayNotifications = (oneTimeNotifications + periodicNotifications).sortedBy { it.date }
+            val todayNotifications = (oneTimeNotifications + periodicNotifications).sortedBy { it.date }
 
-        return DataResult(success = true, data = todayNotifications)
+            DataResult.success(data = todayNotifications)
+        } catch (ex: Throwable) {
+            DataResult.error(errorMessage = ex.message)
+        }
     }
 
     override suspend fun getOneTimeNotification(id: Int): DataResult<OneTimeNotification?> {
-        return DataResult(
-            success = true,
-            data = notificationDao.getOneTimeNotification(id)?.toDomainEntity()
-        )
+        return try {
+            DataResult.success(
+                data = notificationDao.getOneTimeNotification(id)?.toDomainEntity()
+            )
+        } catch (ex: Throwable) {
+            DataResult.error(errorMessage = ex.message)
+        }
+    }
+
+    override suspend fun getOneTimeNotificationsWithActive(isActive: Boolean): DataResult<List<OneTimeNotification>> {
+        return try {
+            val oneTimeNotifications = notificationDao.getOneTimeNotificationsWithActive(isActive)
+                .map { it.toDomainEntity() }
+            DataResult.success(data = oneTimeNotifications)
+        } catch (ex: Throwable) {
+            DataResult.error(errorMessage = ex.message)
+        }
+    }
+
+    override suspend fun getPeriodicNotifications(): DataResult<List<PeriodicNotificationWithRules>> {
+        return try {
+            val periodicTimeNotificationsWithRules = notificationDao.getPeriodicNotifications()
+                .map {
+                    PeriodicNotificationWithRules(
+                        notification = it.notification.toDomainEntity(),
+                        rules = it.rules.map { rule -> rule.toDomainEntity() }
+                    )
+                }
+            DataResult.success(data = periodicTimeNotificationsWithRules)
+        } catch (ex: Throwable) {
+            DataResult.error(errorMessage = ex.message)
+        }
     }
 
     override suspend fun getPeriodicNotification(id: Int): DataResult<PeriodicNotificationWithRules?> {
-        return DataResult(
-            success = true,
-            data = notificationDao.getPeriodicNotification(id)?.let {
-                PeriodicNotificationWithRules(
-                    notification = it.notification.toDomainEntity(),
-                    rules = it.rules.map { rule -> rule.toDomainEntity() }
-                )
-            }
-        )
+        return try {
+            DataResult.success(
+                data = notificationDao.getPeriodicNotification(id)?.let {
+                    PeriodicNotificationWithRules(
+                        notification = it.notification.toDomainEntity(),
+                        rules = it.rules.map { rule -> rule.toDomainEntity() }
+                    )
+                }
+            )
+        } catch (ex: Throwable) {
+            DataResult.error(errorMessage = ex.message)
+        }
     }
 
     override suspend fun saveOneTimeNotification(notification: OneTimeNotification): DataResult<OneTimeNotification> {
@@ -53,9 +89,9 @@ class NotificationLocalRepository @Inject constructor(
                 notification.toRoomEntity()
             ).toInt()
 
-            DataResult(success = true, data = notification.copy(id = notificationId))
+            DataResult.success(data = notification.copy(id = notificationId))
         } catch (ex: Throwable) {
-            DataResult(success = false, errorMessage = ex.message)
+            DataResult.error(errorMessage = ex.message)
         }
     }
 
@@ -77,15 +113,14 @@ class NotificationLocalRepository @Inject constructor(
 
             val updatedNotificationWithRules = notificationDao.getPeriodicNotification(notificationId)!!
 
-            DataResult(
-                success = true,
+            DataResult.success(
                 data = PeriodicNotificationWithRules(
                     notification = updatedNotificationWithRules.notification.toDomainEntity(),
                     rules = updatedNotificationWithRules.rules.map { it.toDomainEntity() }
                 )
             )
         } catch (ex: Throwable) {
-            DataResult(success = false, errorMessage = ex.message)
+            DataResult.error(errorMessage = ex.message)
         }
     }
 }

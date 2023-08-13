@@ -23,6 +23,8 @@ data class OneTimeNotification(
     val text: String,
     @ColumnInfo(name = DATE)
     val date: Date,
+    @ColumnInfo(name = IS_ACTIVE)
+    val isActive: Boolean,
 ) {
     companion object {
         const val TABLE_NAME = "one_time_notifications"
@@ -30,5 +32,6 @@ data class OneTimeNotification(
         const val TITLE = "title"
         const val TEXT = "text"
         const val DATE = "date"
+        const val IS_ACTIVE = "is_active"
     }
 }

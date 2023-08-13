@@ -5,7 +5,8 @@ fun OneTimeNotification.toDomainEntity() : ldev.myNotifier.domain.entities.OneTi
         id = id.toInt(),
         title = title,
         text = text,
-        date = date
+        date = date,
+        isActive = isActive
     )
 }
 
@@ -15,6 +16,7 @@ fun ldev.myNotifier.domain.entities.OneTimeNotification.toRoomEntity() : OneTime
         title = title,
         text = text,
         date = date,
+        isActive = isActive
     )
 }
 

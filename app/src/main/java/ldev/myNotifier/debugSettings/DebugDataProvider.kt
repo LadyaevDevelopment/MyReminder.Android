@@ -36,7 +36,8 @@ class DebugDataProvider : DataProvider {
                 id = 0,
                 title = "My first notification",
                 text = "Stuff...",
-                date = Date()
+                date = Date(),
+                isActive = true
             ) as T
         }
         return null
