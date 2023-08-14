@@ -25,7 +25,7 @@ class NotificationLocalRepository @Inject constructor(
             val periodicNotifications = notificationDao.getPeriodicNotificationRulesForDayOfWeek(localDateTime.dayOfWeek)
                 .map { TodayNotification.periodicNotification(it.notification.toDomainEntity(), it.rule.toDomainEntity()) }
 
-            val todayNotifications = (oneTimeNotifications + periodicNotifications).sortedBy { it.date }
+            val todayNotifications = (oneTimeNotifications + periodicNotifications).sortedBy { it.time }
 
             DataResult.success(data = todayNotifications)
         } catch (ex: Throwable) {

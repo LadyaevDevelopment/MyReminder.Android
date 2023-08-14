@@ -5,7 +5,7 @@ import java.util.Date
 data class TodayNotification(
     val id: Int,
     val title: String,
-    val date: Date,
+    val time: Time,
     val type: NotificationType,
     val status: TodayNotificationStatus
 ) {

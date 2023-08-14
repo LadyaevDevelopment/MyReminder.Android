@@ -10,4 +10,8 @@ data class Time(
         val otherTotalMinutes = other.hour * 60 + other.minute
         return thisTotalMinutes.compareTo(otherTotalMinutes)
     }
+
+    override fun toString(): String {
+        return String.format("%02d:%02d", hour, minute)
+    }
 }

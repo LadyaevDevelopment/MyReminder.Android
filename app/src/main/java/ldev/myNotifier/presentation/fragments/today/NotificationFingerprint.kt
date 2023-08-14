@@ -7,7 +7,6 @@ import ldev.myNotifier.R
 import ldev.myNotifier.databinding.TimeLineNotificationBinding
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.entities.TodayNotificationStatus
-import ldev.myNotifier.utils.formatAsHoursMinutes
 import ldev.myNotifier.utils.recyclerView.BaseViewHolder
 import ldev.myNotifier.utils.recyclerView.ItemFingerprint
 
@@ -57,10 +56,10 @@ class NotificationViewHolder(
                 TodayNotificationStatus.Pending -> root.context.getColor(R.color.bisque)
             })
             if (item.status == TodayNotificationStatus.Postponed) {
-                time.text = item.run { date.formatAsHoursMinutes() }
+                time.text = item.time.toString()
                 time.setTextColor(root.context.getColor(R.color.white))
             } else {
-                time.text = item.date.formatAsHoursMinutes()
+                time.text = item.time.toString()
                 time.setTextColor(root.context.getColor(R.color.black))
             }
         }

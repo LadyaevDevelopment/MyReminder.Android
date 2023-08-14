@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
         (application as MainApplication).appComponent
     }
 
+
+    // TODO: add request runtime exact alarm permission for android 14:
+    // startActivity(Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM))
+    // https://developer.android.com/about/versions/14/changes/schedule-exact-alarms
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))

@@ -7,7 +7,7 @@ import ldev.myNotifier.domain.entities.OneTimeNotification
 import ldev.myNotifier.domain.entities.PeriodicNotification
 import ldev.myNotifier.domain.entities.TodayNotification
 import ldev.myNotifier.domain.entities.TodayNotificationStatus
-import ldev.myNotifier.utils.findNextDateByDayOfWeek
+import ldev.myNotifier.utils.getLocalTime
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -18,7 +18,7 @@ fun TodayNotification.Companion.oneTimeNotification(notification: OneTimeNotific
     return TodayNotification(
         id = notification.id,
         title = notification.title,
-        date = notification.date,
+        time = notification.date.getLocalTime(),
         type = NotificationType.OneTime,
         // TODO: fix
         status = TodayNotificationStatus.Completed
@@ -33,7 +33,7 @@ fun TodayNotification.Companion.periodicNotification(
     return TodayNotification(
         id = notification.id,
         title = notification.title,
-        date = findNextDateByDayOfWeek(rule.dayOfWeek, rule.time, false),
+        time = rule.time,
         type = NotificationType.Periodic,
         // TODO: fix
         status = TodayNotificationStatus.Completed
